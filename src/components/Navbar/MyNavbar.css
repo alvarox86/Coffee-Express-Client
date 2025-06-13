@@ -1,0 +1,8 @@
+.searchBtnNavBar{
+    border: solid 0.5px;
+}
+
+header{
+    display: flex !important;
+    justify-content: space-evenly !important;
+}
