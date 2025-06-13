@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import service from "../../services/service.config";
+import { Link } from "react-router-dom";
 
 function SignupPage() {
 
@@ -86,6 +87,10 @@ function SignupPage() {
         { errorMessage && <p>{errorMessage}</p> }
 
       </form>
+        <p>Do you already have an account</p>
+      <Link to={"/login"}>
+        <p>login</p>
+      </Link>
       
     </div>
   );

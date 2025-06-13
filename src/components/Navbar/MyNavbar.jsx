@@ -1,4 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useContext } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { AuthContext } from "../../context/auth.context";
+import "./MyNavBar.css"
+import cafeicon from "../../assets/images/cafeicon.png"
+import axios from "axios";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,24 +20,70 @@ import HomeIcon from "@mui/icons-material/Home";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoIcon from "@mui/icons-material/Info";
 import Face2Icon from '@mui/icons-material/Face2';
-import Face6Icon from '@mui/icons-material/Face6';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import "./MyNavBar.css"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-import { Link } from "react-router-dom";
-import cafeicon from "../../assets/images/cafeicon.png"
 
 function MyNavBar() {
+  const { isLoggedIn } = useContext(AuthContext)
+  const {loggedUserId} = useContext(AuthContext)
+
+  const navigate = useNavigate()
+
+  const { authenticateUser } = useContext(AuthContext)
+
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
 
+  const handleLogout = async () => {
+
+    // borrar el token de local storage
+    localStorage.removeItem("authToken")
+
+    try {
+      
+      // como el token no existe, la funcion cambia los estados del contexto para indicar que el usuario ya no está logeado
+      await authenticateUser()
+
+      navigate("/") // o cualquier otra página pública
+
+    } catch (error) {
+      console.log(error) 
+    }
+  }
+
+  //--------------------------------------------
+
+  const [userProfilePicture, setUserProfilePicture ] = useState(null)
+  const [userUserName, setUserUserName] = useState(null)
+
+  const params = useParams()
+
+  useEffect(() =>{
+    getData()
+  },[params])
+
+  const getData = async () =>{
+    const storedToken = localStorage.getItem("authToken")
+    try {
+      if(AuthContext){
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/user/${loggedUserId}`, { headers: { Authorization: `Bearer ${storedToken}` }})
+
+        setUserUserName(response.data.username)
+        setUserProfilePicture(response.data.profilepicture)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  //--------------------------------------------
   const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -108,8 +161,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   );
 
   return (
-    <Box sx={{ flexGrow: 1, margin: "30px" }}>
-      <AppBar position="static" color="inherit" sx={{ borderRadius: "10px", justifyContent:"space-between"  }}>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static" color="inherit">
         <Toolbar className="toolBar" sx={{ margin: "10px" }}>
           <IconButton
             size="large"
@@ -145,7 +198,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
             />
           </Search>
           <Link to={"/signup"}  style={{ textDecoration: "none", color: "black" }}>
-            <AccountCircleIcon sx={{width:"50px", height:"50px"}}/>
+            {isLoggedIn === true ? (
+              <>
+                <div className="loggedCard">
+                  <img src={userProfilePicture} alt="User Icon" style={{width:"50px"}}/>
+                  <p>{userUserName}</p>
+                </div>
+                <button onClick={handleLogout}>LogOut</button>
+              </>
+            ):(
+              <>
+                <AccountCircleIcon sx={{width:"50px", height:"50px"}} />
+              </>
+              )
+            }
           </Link>
         </Toolbar>
       </AppBar>

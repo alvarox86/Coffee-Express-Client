@@ -28,7 +28,7 @@ function AuthWrapper(props) {
       setIsValidatingToken(false)
 
     } catch (error) {
-      console.log(error)
+      error.response.status === 401
 
       // si la llamada llega a este punto significa que el token no existe, no es valido o expiró
       setIsLoggedIn(false)
