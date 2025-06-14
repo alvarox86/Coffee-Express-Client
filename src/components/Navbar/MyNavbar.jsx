@@ -164,6 +164,15 @@ function MyNavBar() {
           </ListItem>
         </Link>
         <Divider />
+        <Link
+          to={`/userprofile/${loggedUserId}`}
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <ListItem>
+            <InfoIcon sx={{ paddingRight: "10px" }} /> User profile
+          </ListItem>
+        </Link>
+        <Divider />
       </List>
     </Box>
   );
