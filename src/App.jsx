@@ -8,6 +8,7 @@ import NotFoundPage from './pages/ErrorsPages/NotFoundPage'
 import ProductsPage from './pages/ProductsPage/ProductsPage'
 import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage'
 import { useState } from 'react'
+import CartPage from './pages/CartPage/CartPage'
 
 function App() {
    const [products, setProducts] = useState(null);
@@ -21,8 +22,10 @@ function App() {
         <Route path='/signup' element={<SignupPage/>} />
         <Route path='/login' element={<LoginPage/>} />
         <Route path="/products" element={<ProductsPage products={products} setProducts={setProducts}/>}/>
-        <Route path='/products/:productId' element={<ProductDetailsPage/>}/>
+        <Route path='/products/:productId' element={<ProductDetailsPage products={products} setProducts={setProducts}/>}/>
         
+
+        <Route path='/cart' element={<CartPage/>}/>
         <Route path='*' element={<NotFoundPage/>} />
       </Routes>
     </>
