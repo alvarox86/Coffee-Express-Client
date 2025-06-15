@@ -2,7 +2,6 @@ import {
   Box,
   Typography,
   Button,
-  Grid,
   Card,
   CardMedia,
   CardContent,
@@ -14,6 +13,7 @@ import CoffeeIcon from "@mui/icons-material/Coffee";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import LocalCafeIcon from "@mui/icons-material/LocalCafe";
+import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 
 /*Esto es para poner algunos cafes como destacados, debemos poner data de nuestro server, pero para que veas como quedaría */
@@ -102,7 +102,7 @@ function HomePage() {
           sx={{ display: "flex", justifyContent: "center" }}
         >
           {featuredProducts.map((product) => (
-            <Grid xs={12} sm={6} md={3} key={product.id}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={product.id}>
               <Card>
                 <CardMedia component="img" height="200" image={product.img} />
                 <CardContent>
@@ -144,7 +144,7 @@ function HomePage() {
             spacing={4}
             sx={{ display: "flex", justifyContent: "center" }}
           >
-            <Grid xs={12} sm={6} md={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <Stack alignItems="center" spacing={1}>
                 <CoffeeIcon fontSize="large" sx={{ color: "#D9A689" }} />
                 <Typography sx={{ color: "#261420" }}>
@@ -152,13 +152,13 @@ function HomePage() {
                 </Typography>
               </Stack>
             </Grid>
-            <Grid xs={12} sm={6} md={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <Stack alignItems="center" spacing={1}>
                 <LocalShippingIcon fontSize="large" sx={{ color: "#D9A689" }} />
                 <Typography sx={{ color: "#261420" }}>24h Delivery</Typography>
               </Stack>
             </Grid>
-            <Grid xs={12} sm={6} md={3}>
+           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <Stack alignItems="center" spacing={1}>
                 <VerifiedIcon fontSize="large" sx={{ color: "#D9A689" }} />
                 <Typography sx={{ color: "#261420" }}>
@@ -166,7 +166,7 @@ function HomePage() {
                 </Typography>
               </Stack>
             </Grid>
-            <Grid xs={12} sm={6} md={3}>
+           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <Stack alignItems="center" spacing={1}>
                 <LocalCafeIcon fontSize="large" sx={{ color: "#D9A689" }} />
                 <Typography sx={{ color: "#261420" }}>Eco-Friendly</Typography>

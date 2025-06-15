@@ -3,7 +3,8 @@ import axios from "axios";
 
 import ProductCard from "../../components/ProductCard/ProductCard";
 
-import { Box, Container, Typography, Grid } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
 
 function ProductsPage({products, setProducts}) {
  
@@ -35,7 +36,7 @@ function ProductsPage({products, setProducts}) {
          {products && products.length > 0 && (
           <Grid container spacing={4} justifyContent="center">
             {products.map((product) => (
-              <Grid xs={12} sm={6} md={4} lg={3} key={product._id}>
+             <Grid key={product._id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
                 <ProductCard product={product} />
               </Grid>
             ))}

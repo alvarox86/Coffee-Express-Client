@@ -10,7 +10,7 @@ function AuthWrapper(props) {
 
   const [ isLoggedIn, setIsLoggedIn ] = useState(false)
   const [ loggedUserId, setLoggedUserId ] = useState(null)
-  const [ rol, setRol ] = useState(null) //! solo si implementamos roles
+  const [ rol, setRol ] = useState(null) 
 
   const [ isValidatingToken, setIsValidatingToken ] = useState(true)
   //false y null porque asumimos que es un extraño (quizas más adelante lo validemos)
