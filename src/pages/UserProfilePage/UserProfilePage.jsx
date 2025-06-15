@@ -1,6 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/auth.context";
+import "./UserProfilePage.css"
+import { Link } from "react-router-dom";
 
 function UserProfilePage() {
     const { isLoggedIn } = useContext(AuthContext);
@@ -20,12 +22,10 @@ function UserProfilePage() {
         try {
             if(storedToken){
                 const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/user/${loggedUserId}`,{ headers: { Authorization: `Bearer ${storedToken}` } });
-                console.log(response.data)
                 setUserUserName(response.data.username);
                 setUserProfilePicture(response.data.profilepicture);
                 setUserPhone(response.data.phone)
                 setUserAdress(response.data.adress)
-
             }        
         } catch (error) {
             console.log(error)
@@ -35,18 +35,27 @@ function UserProfilePage() {
     return (
     <div className="userProfileInfo">
     {isLoggedIn ? (
-        
         <div>
-            <p>{userUserName}</p>
-            <img src={userProfilePicture} alt="foto perfil" className="" />
-            <p>{userAdress}</p>
-            <p>{userPhone}</p>
+            <div className="userProfileData">
+                <div>
+                    <img src={userProfilePicture} alt="foto perfil" className="userIcon" />
+                </div>
+                <div className="userTextInfo">
+                    <p>{userUserName}</p>
+                    <p>{userAdress}</p>
+                    <p>{userPhone}</p>
+                </div>
+             </div>
+
+            <div className="btnEditProfile">
+                <Link to={`/editprofile/${loggedUserId}`}>
+                    <button>Edit profile</button>
+                </Link>
+            </div>
         </div>
-    
     ):(
         <h2>No tienes permiso para ver esto</h2>
     )}
-
     </div>
   )
 }

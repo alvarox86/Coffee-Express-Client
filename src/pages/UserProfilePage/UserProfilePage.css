@@ -1,0 +1,28 @@
+.userProfileData{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: antiquewhite;
+    color: black;
+    width: 600px;
+    height: 200px;
+    border-radius: 10px; 
+    padding: 100px;
+}
+
+.userIcon{
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+}
+
+.userProfileInfo{
+    display: flex;
+    justify-content: center;
+}
+
+.userTextInfo p{
+    font-weight: 500;
+    font-size:x-large
+}
