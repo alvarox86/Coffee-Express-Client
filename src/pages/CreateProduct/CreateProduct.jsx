@@ -1,4 +1,4 @@
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -34,13 +34,12 @@ function CreateProduct() {
       type,
       price,
       stock,
-      createdBy: loggedUserId
+      createdBy: loggedUserId,
     };
 
     const storedToken = localStorage.getItem("authToken");
     try {
       if (storedToken) {
-
         console.log(" Info del producto", newProduct);
 
         await axios.post(
@@ -52,7 +51,6 @@ function CreateProduct() {
             },
           }
         );
-         console.log("Respuesta del servidor");
       }
       console.log("producto añadido correctamente");
 
@@ -78,7 +76,7 @@ function CreateProduct() {
         }}
       >
         <Typography variant="h5" fontWeight="bold" gutterBottom>
-          Crear nuevo producto
+          Submit your product
         </Typography>
 
         <Stack spacing={3}>
@@ -125,17 +123,23 @@ function CreateProduct() {
               value={region}
               onChange={(e) => setRegion(e.target.value)}
               fullWidth
+              required
             />
           </Stack>
 
           <TextField
+            select
             name="type"
             label="Type"
             value={type}
             onChange={(e) => setType(e.target.value)}
             fullWidth
             required
-          />
+          >
+            <MenuItem value="beans">Beans</MenuItem>
+            <MenuItem value="capsule">Capsule</MenuItem>
+            <MenuItem value="ground">Ground</MenuItem>
+          </TextField>
 
           <TextField
             name="price"
