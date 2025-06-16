@@ -25,8 +25,9 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Button } from "@mui/material";
 
-function MyNavBar() {
+function MyNavBar({ products, setProducts }) {
   const { isLoggedIn, loggedUserId, rol } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -50,6 +51,16 @@ function MyNavBar() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  //----------------Search Bar------------------
+
+  const handleInputChange = (event) => {
+    setProducts(event.target.value);
+  };
+
+  const handleSearchButton = () => {
+    navigate("/products");
   };
 
   //--------------------------------------------
@@ -171,7 +182,8 @@ function MyNavBar() {
               style={{ textDecoration: "none", color: "black" }}
             >
               <ListItem>
-                <AddCircleIcon sx={{ paddingRight: "10px" }} /> Create a new product
+                <AddCircleIcon sx={{ paddingRight: "10px" }} /> Create a new
+                product
               </ListItem>
             </Link>
             <Divider />
@@ -222,7 +234,8 @@ function MyNavBar() {
 
           <Search className="searchBtnNavBar">
             <SearchIconWrapper>
-              <SearchIcon />
+            {/* value={products} onChange={handleInputChange} */}
+                <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"

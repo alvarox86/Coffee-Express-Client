@@ -15,7 +15,7 @@ function App() {
 
   return (
     <>
-      <MyNavbar/>
+      <MyNavbar products={products} setProducts={setProducts}/>
 
       <Routes>
         <Route path='/' element={<HomePage/>} />
