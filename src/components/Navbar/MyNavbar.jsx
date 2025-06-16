@@ -24,10 +24,11 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Button } from "@mui/material";
 
-function MyNavBar() {
-  const { isLoggedIn } = useContext(AuthContext);
-  const { loggedUserId } = useContext(AuthContext);
+function MyNavBar({ products, setProducts }) {
+  const { isLoggedIn, loggedUserId, rol } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -39,18 +40,27 @@ function MyNavBar() {
     setOpen(newOpen);
   };
 
+  /*LOG OUT */
   const handleLogout = async () => {
-    // borrar el token de local storage
     localStorage.removeItem("authToken");
 
     try {
-      // como el token no existe, la funcion cambia los estados del contexto para indicar que el usuario ya no está logeado
       await authenticateUser();
 
-      navigate("/"); // o cualquier otra página pública
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
+  };
+
+  //----------------Search Bar------------------
+
+  const handleInputChange = (event) => {
+    setProducts(event.target.value);
+  };
+
+  const handleSearchButton = () => {
+    navigate("/products");
   };
 
   //--------------------------------------------
@@ -82,7 +92,7 @@ function MyNavBar() {
   };
 
   //--------------------------------------------
-  
+
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
     borderRadius: theme.shape.borderRadius,
@@ -113,7 +123,6 @@ function MyNavBar() {
     width: "100%",
     "& .MuiInputBase-input": {
       padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
       paddingLeft: `calc(1em + ${theme.spacing(4)})`,
       transition: theme.transitions.create("width"),
       [theme.breakpoints.up("sm")]: {
@@ -121,6 +130,8 @@ function MyNavBar() {
       },
     },
   }));
+
+  /*SIDEBAR */
 
   const DrawerList = (
     <Box
@@ -140,7 +151,7 @@ function MyNavBar() {
           style={{ textDecoration: "none", color: "black" }}
         >
           <ListItem>
-            <Face2Icon sx={{ paddingRight: "10px" }} /> Productos
+            <Face2Icon sx={{ paddingRight: "10px" }} /> Our Products
           </ListItem>
         </Link>
         <Divider />
@@ -173,6 +184,20 @@ function MyNavBar() {
           </ListItem>
         </Link>
         <Divider />
+        {rol === "vendor" && (
+          <>
+            <Link
+              to={"/create-product"}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <ListItem>
+                <AddCircleIcon sx={{ paddingRight: "10px" }} /> Create a new
+                product
+              </ListItem>
+            </Link>
+            <Divider />
+          </>
+        )}
       </List>
     </Box>
   );
@@ -202,20 +227,24 @@ function MyNavBar() {
           </IconButton>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <img src={cafeicon} alt="LogoPagina" style={{ height: "80px", marginRight: "20px"}} />
-          <Typography
-            variant="h6"
-            component="div"
-            
-            sx={{ fontWeight: "bold" }}
-          >
-            <h1>Coffee Express</h1>
-          </Typography>
+            <img
+              src={cafeicon}
+              alt="LogoPagina"
+              style={{ height: "80px", marginRight: "20px" }}
+            />
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ fontWeight: "bold" }}
+            >
+              <h1>Coffee Express</h1>
+            </Typography>
           </Box>
-          
+
           <Search className="searchBtnNavBar">
             <SearchIconWrapper>
-              <SearchIcon />
+            {/* value={products} onChange={handleInputChange} */}
+                <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
@@ -226,15 +255,25 @@ function MyNavBar() {
           {/* Auth */}
           <Link
             to={"/signup"}
-            style={{ textDecoration: "none", color: "black", marginLeft: "20px"}}
+            style={{
+              textDecoration: "none",
+              color: "black",
+              marginLeft: "20px",
+            }}
           >
             {isLoggedIn === true ? (
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <div className="loggedCard">
-                  <img src={userProfilePicture} alt="User" style={{ width: "36px", borderRadius: "50%" }} />
-                   <Typography variant="body1">{userUserName}</Typography>
+                  <img
+                    src={userProfilePicture}
+                    alt="User"
+                    style={{ width: "36px", borderRadius: "50%" }}
+                  />
+                  <Typography variant="body1">{userUserName}</Typography>
                 </div>
-                 <button onClick={handleLogout} style={{ marginLeft: "10px" }}>LogOut</button>
+                <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
+                  LogOut
+                </button>
               </Box>
             ) : (
               <>
@@ -245,10 +284,10 @@ function MyNavBar() {
           </Link>
         </Toolbar>
       </AppBar>
-      
+
       {/*Para que no tape el contenido porque el navbar está fixed */}
-      <Toolbar/>
-      <Toolbar/>
+      <Toolbar />
+      <Toolbar />
     </Box>
   );
 }

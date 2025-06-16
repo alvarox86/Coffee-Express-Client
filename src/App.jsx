@@ -7,11 +7,17 @@ import HomePage from './pages/HomePage/HomePage'
 import NotFoundPage from './pages/ErrorsPages/NotFoundPage'
 import UserProfilePage from './pages/UserProfilePage/UserProfilePage'
 import EditProfilePage from './pages/EditProfilePage/EditProfilePage'
+import ProductsPage from './pages/ProductsPage/ProductsPage'
+import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage'
+import { useState } from 'react'
+import CartPage from './pages/CartPage/CartPage'
 
 function App() {
+   const [products, setProducts] = useState(null);
+
   return (
     <>
-      <MyNavbar/>
+      <MyNavbar products={products} setProducts={setProducts}/>
 
       <Routes>
         <Route path='/' element={<HomePage/>} />
@@ -19,7 +25,11 @@ function App() {
         <Route path='/login' element={<LoginPage/>} />
         <Route path='/userprofile/:userId' element={<UserProfilePage/>} />
         <Route path='/editprofile/:userId' element={<EditProfilePage/>} /> 
+        <Route path="/products" element={<ProductsPage products={products} setProducts={setProducts}/>}/>
+        <Route path='/products/:productId' element={<ProductDetailsPage products={products} setProducts={setProducts}/>}/>
         
+
+        <Route path='/cart' element={<CartPage/>}/>
         <Route path='*' element={<NotFoundPage/>} />
       </Routes>
     </>

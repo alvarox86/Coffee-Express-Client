@@ -2,7 +2,6 @@ import {
   Box,
   Typography,
   Button,
-  Grid,
   Card,
   CardMedia,
   CardContent,
@@ -14,6 +13,8 @@ import CoffeeIcon from "@mui/icons-material/Coffee";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import LocalCafeIcon from "@mui/icons-material/LocalCafe";
+import Grid from "@mui/material/Grid";
+import { Link } from "react-router-dom";
 
 /*Esto es para poner algunos cafes como destacados, debemos poner data de nuestro server, pero para que veas como quedaría */
 const featuredProducts = [
@@ -46,7 +47,7 @@ function HomePage() {
       <Box
         sx={{
           height: "90vh",
-          backgroundImage: "url(/images/hero-coffee.jpg)",
+          backgroundImage: "hay que añadir una nueva",
           backgroundSize: "cover",
           backgroundPosition: "center",
           display: "flex",
@@ -58,7 +59,11 @@ function HomePage() {
         }}
       >
         <Box sx={{ bgcolor: "rgba(0,0,0,0.5)", p: 4, borderRadius: 2 }}>
-          <Typography variant="h2" fontWeight="bold">
+          <Typography
+            variant="h2"
+            fontWeight="bold"
+            sx={{ fontSize: { xs: "2.5rem", md: "4rem" } }}
+          >
             Coffee Express
           </Typography>
           <Typography variant="h5" sx={{ my: 2 }}>
@@ -66,10 +71,22 @@ function HomePage() {
           </Typography>
           <Button
             variant="contained"
-            sx={{ color: "white", backgroundColor: "#8B5042" }}
             size="large"
+            sx={{
+              backgroundColor: "#8B5042",
+              color: "white",
+              transition: "background-color 0.3s",
+              "&:hover": {
+                backgroundColor: "#6c3a2f",
+              },
+            }}
           >
-            Browse Our Coffees
+            <Link
+              to="/products"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              Browse Our Coffees
+            </Link>
           </Button>
         </Box>
       </Box>
@@ -79,9 +96,13 @@ function HomePage() {
         <Typography variant="h4" textAlign="center" fontWeight="bold" mb={4}>
           Featured Coffees
         </Typography>
-        <Grid container spacing={4} sx={{display: "flex", justifyContent: "center"}}>
+        <Grid
+          container
+          spacing={4}
+          sx={{ display: "flex", justifyContent: "center" }}
+        >
           {featuredProducts.map((product) => (
-            <Grid item xs={12} sm={6} md={3} key={product.id}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={product.id}>
               <Card>
                 <CardMedia component="img" height="200" image={product.img} />
                 <CardContent>
@@ -100,7 +121,14 @@ function HomePage() {
       </Container>
 
       {/* Why Choose Us */}
-      <Box sx={{ backgroundColor: "#F2E8DF", py: 6, display: "flex", justifyContent: "center"}} >
+      <Box
+        sx={{
+          backgroundColor: "#F2E8DF",
+          py: 6,
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <Container>
           <Typography
             variant="h4"
@@ -111,8 +139,12 @@ function HomePage() {
           >
             Why Choose Us
           </Typography>
-          <Grid container spacing={4} sx={{display: "flex", justifyContent: "center"}}>
-            <Grid item xs={12} sm={6} md={3}>
+          <Grid
+            container
+            spacing={4}
+            sx={{ display: "flex", justifyContent: "center" }}
+          >
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <Stack alignItems="center" spacing={1}>
                 <CoffeeIcon fontSize="large" sx={{ color: "#D9A689" }} />
                 <Typography sx={{ color: "#261420" }}>
@@ -120,13 +152,13 @@ function HomePage() {
                 </Typography>
               </Stack>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <Stack alignItems="center" spacing={1}>
                 <LocalShippingIcon fontSize="large" sx={{ color: "#D9A689" }} />
                 <Typography sx={{ color: "#261420" }}>24h Delivery</Typography>
               </Stack>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <Stack alignItems="center" spacing={1}>
                 <VerifiedIcon fontSize="large" sx={{ color: "#D9A689" }} />
                 <Typography sx={{ color: "#261420" }}>
@@ -134,7 +166,7 @@ function HomePage() {
                 </Typography>
               </Stack>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <Stack alignItems="center" spacing={1}>
                 <LocalCafeIcon fontSize="large" sx={{ color: "#D9A689" }} />
                 <Typography sx={{ color: "#261420" }}>Eco-Friendly</Typography>
