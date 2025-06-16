@@ -8,18 +8,13 @@ function EditProfilePage() {
     const navigate = useNavigate()
 
     const { loggedUserId } = useContext(AuthContext);
-    const [userUserName, setuserUserName] = useState("")
-    const [userPhone, setUserPhone] = useState("")
-    const [userAdress, setUserAdress] = useState("")
 
     const [isUploading, setIsUploading] = useState(false);
-    const [imageUrl, setImageUrl] = useState(null); 
-
+    
     const [usernameInputValue, setUsernameInputValue] = useState("")
     const [phoneInputValue,setPhoneInputValue] = useState("")
     const [adressInputValue, setAdressInputValue] = useState("")
-    /* const [profilepictureInputValue, setProfilepictureInputValue] = useState("") */
-    
+    const [imageUrl, setImageUrl] = useState(null); 
 
     const handleUsernameChange = (event) => {
         setUsernameInputValue(event.target.value)
@@ -40,10 +35,11 @@ function EditProfilePage() {
 
         try {
             if(storedToken){
-                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/user/${loggedUserId}`,{ headers: { Authorization: `Bearer ${storedToken}` } });
-                setuserUserName(response.data.username)
-                setUserPhone(response.data.phone)
-                setUserAdress(response.data.adress)
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/user`,{ headers: { Authorization: `Bearer ${storedToken}` } });
+                setUsernameInputValue(response.data.username)
+                setPhoneInputValue(response.data.phone)
+                setAdressInputValue(response.data.adress)
+                setImageUrl(response.data.profilepicture)
             }
         } catch (error) {
             console.log(error)
@@ -56,6 +52,7 @@ function EditProfilePage() {
 
     const handleSubmitForm = async (e) =>{
         e.preventDefault()
+        const storedToken = localStorage.getItem("authToken");
 
         const updatedProfile = {
             username: usernameInputValue,
@@ -65,7 +62,7 @@ function EditProfilePage() {
         }
 
         try {
-            await axios.patch(`${import.meta.env.VITE_SERVER_URL}/api/user/${loggedUserId}`, updatedProfile)
+            await axios.patch(`${import.meta.env.VITE_SERVER_URL}/api/user`, updatedProfile,{ headers: { Authorization: `Bearer ${storedToken}` } })
             navigate(`/userprofile/${loggedUserId}`)
             
         } catch (error) {
@@ -101,13 +98,13 @@ function EditProfilePage() {
             <h3>Update data</h3>
             
             <label>Username</label>
-            <input type="text" required name="User name" onChange={handleUsernameChange} value={usernameInputValue} placeholder={userUserName}/>
+            <input type="text" required name="User name" onChange={handleUsernameChange} value={usernameInputValue}/>
 
             <label>Phone</label>
-            <input type="text" required name="Phone" onChange={handlePhoneChange} value={phoneInputValue} placeholder={userPhone}/>
+            <input type="text" required name="Phone" onChange={handlePhoneChange} value={phoneInputValue}/>
 
             <label>Adress</label>
-            <input type="text" required name="Adress" onChange={handleAdressChange} value={adressInputValue} placeholder={userAdress}/>
+            <input type="text" required name="Adress" onChange={handleAdressChange} value={adressInputValue}/>
 
             <label>Image</label>
             <input type="file" name="Image" onChange={handleFileUpload} disabled={isUploading}/>

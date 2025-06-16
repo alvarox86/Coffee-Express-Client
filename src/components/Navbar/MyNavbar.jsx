@@ -25,6 +25,8 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Badge from '@mui/material/Badge';
 import { Button } from "@mui/material";
 
 function MyNavBar({ products, setProducts }) {
@@ -67,22 +69,24 @@ function MyNavBar({ products, setProducts }) {
 
   const [userProfilePicture, setUserProfilePicture] = useState(null);
   const [userUserName, setUserUserName] = useState(null);
+  const [userCart, setUserCart] = useState([])
 
   const params = useParams();
 
   useEffect(() => {
     getData();
-  }, [params]);
+  }, [loggedUserId]);
 
   const getData = async () => {
     const storedToken = localStorage.getItem("authToken");
     try {
       if (AuthContext) {
         const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/api/user/${loggedUserId}`,
+          `${import.meta.env.VITE_SERVER_URL}/api/user`,
           { headers: { Authorization: `Bearer ${storedToken}` } }
         );
-
+        
+        setUserCart(response.data.cart)
         setUserUserName(response.data.username);
         setUserProfilePicture(response.data.profilepicture);
       }
@@ -252,6 +256,12 @@ function MyNavBar({ products, setProducts }) {
             />
           </Search>
 
+          {<IconButton aria-label="cart">
+            <Badge badgeContent={userCart.length} color="error">
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>}
+
           {/* Auth */}
           <Link
             to={"/signup"}
@@ -263,13 +273,13 @@ function MyNavBar({ products, setProducts }) {
           >
             {isLoggedIn === true ? (
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <div className="loggedCard">
+                <div className="loggedCard" key={loggedUserId}>
                   <img
                     src={userProfilePicture}
                     alt="User"
                     style={{ width: "36px", borderRadius: "50%" }}
                   />
-                  <Typography variant="body1">{userUserName}</Typography>
+                  <Typography variant="body1" >{userUserName}</Typography>
                 </div>
                 <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
                   LogOut

@@ -27,9 +27,8 @@ function App() {
         <Route path='/editprofile/:userId' element={<EditProfilePage/>} /> 
         <Route path="/products" element={<ProductsPage products={products} setProducts={setProducts}/>}/>
         <Route path='/products/:productId' element={<ProductDetailsPage products={products} setProducts={setProducts}/>}/>
-        
-
         <Route path='/cart' element={<CartPage/>}/>
+
         <Route path='*' element={<NotFoundPage/>} />
       </Routes>
     </>
