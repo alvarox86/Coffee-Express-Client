@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/auth.context";
 import { UserContext } from "../../context/profile.context";
 import "./MyNavBar.css";
 import cafeicon from "../../assets/images/cafeicon.png";
-import service from "../../services/service.config";
+
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -21,7 +21,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoIcon from "@mui/icons-material/Info";
 import FreeBreakfastIcon from '@mui/icons-material/FreeBreakfast';
-import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
