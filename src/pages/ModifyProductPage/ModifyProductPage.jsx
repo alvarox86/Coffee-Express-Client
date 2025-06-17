@@ -14,7 +14,7 @@ import { AuthContext } from "../../context/auth.context";
 
 function ModifyProductPage() {
   const { productId } = useParams();
-  const { loggedUserId } = useContext(AuthContext);
+  const { loggedUserId, rol } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -36,7 +36,7 @@ function ModifyProductPage() {
 
       try {
         if (storedToken) {
-          const response = await service.get(`/product/${productId}`, {
+          const response = await service.get(`/product/${productId}/modify`, {
             headers: { Authorization: `Bearer ${storedToken}` },
           });
           console.log(response.data.name);
@@ -51,7 +51,12 @@ function ModifyProductPage() {
           console.log(response.data);
         }
       } catch (error) {
-        console.log(error);
+        if (error.response.status) {
+          alert("Access denied.");
+          navigate("/products"); // o cualquier ruta que quieras
+        } else {
+          console.log(error);
+        }
       }
     };
 
@@ -80,7 +85,9 @@ function ModifyProductPage() {
       await service.put(`/product/${productId}`, updateProduct, {
         headers: { Authorization: `Bearer ${storedToken}` },
       });
+
       console.log("producto EDITADO correctamente");
+
       navigate(`/products/${productId}`);
     } catch (error) {
       console.log(error);

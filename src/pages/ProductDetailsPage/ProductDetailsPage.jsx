@@ -1,7 +1,15 @@
-import { Alert, Box, Button, Divider, Paper, Typography,Snackbar } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Divider,
+  Paper,
+  Typography,
+  Snackbar,
+} from "@mui/material";
 
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ReviewCard from "./ReviewCard";
 import CreateReview from "./CreateReview";
 import { AuthContext } from "../../context/auth.context";
@@ -10,55 +18,51 @@ import { UserContext } from "../../context/profile.context";
 
 function ProductDetailsPage() {
   const { productId } = useParams();
-  const {loggedUserId} = useContext(AuthContext)
-  const { getUserData } =  useContext(UserContext)
-  const [openSnackbar, setOpenSnackbar] = useState(false)
+  const { loggedUserId, rol } = useContext(AuthContext);
+  const { getUserData } = useContext(UserContext);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
 
+  const fetchProduct = async () => {
+    try {
+      const productResponse = await service.get(`/product/${productId}`);
+      setProduct(productResponse.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const fetchProduct = async () => {
-      try {
-        const productResponse = await service.get(
-          `/product/${productId}`
-        );
-        setProduct(productResponse.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const fetchReviews = async () => {
+    try {
+      const reviewResponse = await service.get(`/review/product/${productId}`);
+      setReviews(reviewResponse.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const fetchReviews = async () => {
-      try {
-        const reviewResponse = await service.get(`/review/product/${productId}`
-        );
-        setReviews(reviewResponse.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
- // Esto  borra la review del estado
-const handleDeleteReview = async (reviewId) => {
-  const storedToken = localStorage.getItem("authToken");
-  try {
-    await service.delete(`/review/${reviewId}`, {
-      headers: {
-        Authorization: `Bearer ${storedToken}`,
-      }
-    });
-    /*Aqui actualizamos el estado de reviews filtrando y eliminando la review que tenga ese reviewId. */
-    setReviews((prevReviews) => {
-      const updatedReviews = prevReviews.filter((review) => {
-        return review._id !== reviewId; //Si la review del id que está comprobando es diferente a la que quiero eliminar, la dejamos en reviews
-      })
-      return updatedReviews; //Devolvemos el array nuevo sin la reseña que queremos borrar.
-    } )
-  } catch (error) {
-    console.log(error)
-  }
-}
+  // Esto  borra la review del estado
+  const handleDeleteReview = async (reviewId) => {
+    const storedToken = localStorage.getItem("authToken");
+    try {
+      await service.delete(`/review/${reviewId}`, {
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
+      /*Aqui actualizamos el estado de reviews filtrando y eliminando la review que tenga ese reviewId. */
+      setReviews((prevReviews) => {
+        const updatedReviews = prevReviews.filter((review) => {
+          return review._id !== reviewId; //Si la review del id que está comprobando es diferente a la que quiero eliminar, la dejamos en reviews
+        });
+        return updatedReviews; //Devolvemos el array nuevo sin la reseña que queremos borrar.
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     fetchProduct();
     fetchReviews();
@@ -68,21 +72,21 @@ const handleDeleteReview = async (reviewId) => {
   if (!reviews) return <Typography>Reviews not found </Typography>;
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
-  setOpenSnackbar(false)
-  }
-  
+    setOpenSnackbar(false);
+  };
+
   const handleAddCart = async () => {
     try {
-      await service.patch(`/user/cart/${productId}/add`)
-      setOpenSnackbar(true)
-      getUserData()
+      await service.patch(`/user/cart/${productId}/add`);
+      setOpenSnackbar(true);
+      getUserData();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   return (
     <Box sx={{ p: 3, maxWidth: 1000, mx: "auto" }}>
@@ -139,29 +143,28 @@ const handleDeleteReview = async (reviewId) => {
             }}
             onClick={handleAddCart}
           >
-              Add Cart
+            Add Cart
           </Button>
-          <Link to={`/products/${productId}/modify`}>
-           <Button
-            variant="contained"
-            size="large"
-            sx={{
-              backgroundColor: "#8B5042",
-              color: "white",
-              mt: 3,
-              "&:hover": {
-                backgroundColor: "#6c3a2f",
-              },
-            }}
-          >
-              Edit product
-          </Button>
-          </Link>
-         
+          {rol === "vendor" && (
+            <Link to={`/products/${productId}/modify`}>
+              <Button
+                variant="contained"
+                size="large"
+                sx={{
+                  backgroundColor: "#8B5042",
+                  color: "white",
+                  mt: 3,
+                  "&:hover": {
+                    backgroundColor: "#6c3a2f",
+                  },
+                }}
+              >
+                Edit
+              </Button>
+            </Link>
+          )}
         </Paper>
       </Box>
-
-      
 
       {/* Divider */}
       <Divider sx={{ mb: 4 }} />
@@ -176,36 +179,35 @@ const handleDeleteReview = async (reviewId) => {
       >
         <Box>
           <Box>
-            <CreateReview fetchReviews={fetchReviews}/>
+            <CreateReview fetchReviews={fetchReviews} />
           </Box>
           <Box>
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
-            Reviews
-          </Typography>
-          {reviews.length > 0 ? (
-            reviews.map((review, index) => (
-              <ReviewCard key={index} 
-              review={review} 
-              loggedUserId={loggedUserId}
-              handleDeleteReview={handleDeleteReview}
-              />
-            ))
-          ) : (
-            <Typography variant="body2" color="text.secondary">
-              No comments yet.
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              Reviews
             </Typography>
-          )}
+            {reviews.length > 0 ? (
+              reviews.map((review, index) => (
+                <ReviewCard
+                  key={index}
+                  review={review}
+                  loggedUserId={loggedUserId}
+                  handleDeleteReview={handleDeleteReview}
+                />
+              ))
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                No comments yet.
+              </Typography>
+            )}
           </Box>
         </Box>
       </Box>
-          <Snackbar
+      <Snackbar
         open={openSnackbar}
         onClose={handleClose}
         autoHideDuration={3000}
       >
-        <Alert severity="success">
-          Product added to cart
-        </Alert>
+        <Alert severity="success">Product added to cart</Alert>
       </Snackbar>
     </Box>
   );

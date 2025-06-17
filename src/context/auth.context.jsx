@@ -1,70 +1,77 @@
 import { createContext, useEffect, useState } from "react";
 import service from "../services/service.config";
+import { CircularProgress, Box } from "@mui/material";
 
 // el componente que comparte los estados del contexto por toda la app
-const AuthContext = createContext()
-
+const AuthContext = createContext();
 
 // el componente que almacena y controla los estados del contexto
 function AuthWrapper(props) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedUserId, setLoggedUserId] = useState(null);
+  const [rol, setRol] = useState(null);
 
-  const [ isLoggedIn, setIsLoggedIn ] = useState(false)
-  const [ loggedUserId, setLoggedUserId ] = useState(null)
-  const [ rol, setRol ] = useState(null) 
-
-  const [ isValidatingToken, setIsValidatingToken ] = useState(true)
+  const [isValidatingToken, setIsValidatingToken] = useState(true);
   //false y null porque asumimos que es un extraño (quizas más adelante lo validemos)
 
   const authenticateUser = async () => {
     // funcion para validar el token del usuario y saber quien es y actualiza los estados
     try {
-      
-      const response = await service.get(`/auth/verify`)
+      const response = await service.get(`/auth/verify`);
 
       // si la llamada llega a este punto significa que el backend valido el token
-      setIsLoggedIn(true)
-      setLoggedUserId(response.data.payload._id)
-      setRol(response.data.payload.rol)
-      setIsValidatingToken(false)
-
+      setIsLoggedIn(true);
+      setLoggedUserId(response.data.payload._id);
+      setRol(response.data.payload.rol);
+      setIsValidatingToken(false);
     } catch (error) {
-      error.response.status === 401
+      const status = error.response.status;
+      if(status === 401) {
+        console.log("Authentication failed: invalid or expired token.")
+      }else if( status === 403) {
+        console.log("Access denied: you do not have permission to view this page.");
+      }else {
+        console.log("Error verifying token:", error.message);
+      }
+
 
       // si la llamada llega a este punto significa que el token no existe, no es valido o expiró
-      setIsLoggedIn(false)
-      setLoggedUserId(null)
-      setRol(null)
-      setIsValidatingToken(false)
+      setIsLoggedIn(false);
+      setLoggedUserId(null);
+      setRol(null);
+      setIsValidatingToken(false);
     }
-
-  }
+  };
 
   useEffect(() => {
-    authenticateUser()
-  }, [])
+    authenticateUser();
+  }, []);
 
   const passedContext = {
     isLoggedIn,
     loggedUserId,
     authenticateUser,
-    rol
-  }
+    rol,
+  };
 
   if (isValidatingToken) {
     return (
-      <h3>... Validando usuario</h3>
-    )
+      <Box
+        height="100vh"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <CircularProgress size={60} thickness={5} sx={{ color: "#8B4513" }} />
+      </Box>
+    );
   }
 
   return (
     <AuthContext.Provider value={passedContext}>
       {props.children}
     </AuthContext.Provider>
-  )
-
+  );
 }
 
-export {
-  AuthContext,
-  AuthWrapper
-}
+export { AuthContext, AuthWrapper };
