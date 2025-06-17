@@ -3,6 +3,7 @@ import axios from "axios";
 import { AuthContext } from "../../context/auth.context";
 import "./UserProfilePage.css"
 import { Link, useParams } from "react-router-dom";
+import service from "../../services/service.config";
 
 function UserProfilePage() {
     const params = useParams()

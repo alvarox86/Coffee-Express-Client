@@ -12,6 +12,7 @@ import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage'
 import { useState } from 'react'
 import CartPage from './pages/CartPage/CartPage'
 import CreateProduct from './pages/CreateProduct/CreateProduct'
+import ModifyProductPage from './pages/ModifyProductPage/ModifyProductPage'
 
 function App() {
    const [products, setProducts] = useState(null);
@@ -29,7 +30,7 @@ function App() {
         <Route path="/products" element={<ProductsPage products={products} setProducts={setProducts}/>}/>
         <Route path='/products/:productId' element={<ProductDetailsPage products={products} setProducts={setProducts}/>}/>
         <Route path='/create-product' element={<CreateProduct/>}/>
-
+        <Route path='/products/:productId/modify' element={<ModifyProductPage/>}/>
         <Route path='/cart' element={<CartPage/>}/>
 
         <Route path='*' element={<NotFoundPage/>} />

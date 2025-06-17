@@ -130,8 +130,27 @@ const handleDeleteReview = async (reviewId) => {
           >
               Add Cart
           </Button>
+          <Link to={`/products/${productId}/modify`}>
+           <Button
+            variant="contained"
+            size="large"
+            sx={{
+              backgroundColor: "#8B5042",
+              color: "white",
+              mt: 3,
+              "&:hover": {
+                backgroundColor: "#6c3a2f",
+              },
+            }}
+          >
+              Edit product
+          </Button>
+          </Link>
+         
         </Paper>
       </Box>
+
+      
 
       {/* Divider */}
       <Divider sx={{ mb: 4 }} />
