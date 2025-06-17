@@ -1,0 +1,14 @@
+.cartProductCard{
+    background-color:antiquewhite;
+    margin: 10px;
+    color: black;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.imgProductCart{
+    width: 200px;
+}

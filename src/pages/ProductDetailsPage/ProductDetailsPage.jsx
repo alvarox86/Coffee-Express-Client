@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import ReviewCard from "./ReviewCard";
 import CreateReview from "./CreateReview";
 import { AuthContext } from "../../context/auth.context";
+import service from "../../services/service.config";
 
 function ProductDetailsPage() {
   const { productId } = useParams();
@@ -65,7 +66,14 @@ const handleDeleteReview = async (reviewId) => {
   if (!product) return <Typography>Products not found</Typography>;
   if (!reviews) return <Typography>Reviews not found </Typography>;
 
-  
+  const handleAddCart = async () => {
+    try {
+      await service.patch(`/user/cart/${productId}/add`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <Box sx={{ p: 3, maxWidth: 1000, mx: "auto" }}>
       {/* Sección de producto */}
@@ -119,13 +127,9 @@ const handleDeleteReview = async (reviewId) => {
                 backgroundColor: "#6c3a2f",
               },
             }}
+            onClick={handleAddCart}
           >
-            <Link
-              to="/cart"
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
               Add Cart
-            </Link>
           </Button>
         </Paper>
       </Box>

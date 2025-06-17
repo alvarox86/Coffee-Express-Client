@@ -31,6 +31,7 @@ function App() {
         <Route path='/create-product' element={<CreateProduct/>}/>
 
         <Route path='/cart' element={<CartPage/>}/>
+
         <Route path='*' element={<NotFoundPage/>} />
       </Routes>
     </>

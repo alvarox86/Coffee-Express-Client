@@ -2,9 +2,10 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/auth.context";
 import "./UserProfilePage.css"
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function UserProfilePage() {
+    const params = useParams()
     const { isLoggedIn } = useContext(AuthContext);
     const { loggedUserId } = useContext(AuthContext);
     const [userProfilePicture, setUserProfilePicture] = useState(null);
@@ -14,14 +15,14 @@ function UserProfilePage() {
 
     useEffect(()=>{
         getData()
-    },[])
+    },[params])
 
     const getData = async () => {
         const storedToken = localStorage.getItem("authToken");
 
         try {
             if(storedToken){
-                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/user/${loggedUserId}`,{ headers: { Authorization: `Bearer ${storedToken}` } });
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/user`,{ headers: { Authorization: `Bearer ${storedToken}` } });
                 setUserUserName(response.data.username);
                 setUserProfilePicture(response.data.profilepicture);
                 setUserPhone(response.data.phone)
