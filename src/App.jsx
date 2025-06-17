@@ -15,11 +15,12 @@ import CreateProduct from './pages/CreateProduct/CreateProduct'
 import ModifyProductPage from './pages/ModifyProductPage/ModifyProductPage'
 
 function App() {
-   const [products, setProducts] = useState(null);
+   const [products, setProducts] = useState([]);
+   const [searchProducts, setSearchProducts] = useState("");
 
   return (
     <>
-      <MyNavbar products={products} setProducts={setProducts}/>
+      <MyNavbar products={products} setProducts={setProducts} setSearchProducts={setSearchProducts}/>
 
       <Routes>
         <Route path='/' element={<HomePage/>} />
@@ -27,7 +28,7 @@ function App() {
         <Route path='/login' element={<LoginPage/>} />
         <Route path='/userprofile/:userId' element={<UserProfilePage/>} />
         <Route path='/editprofile/:userId' element={<EditProfilePage/>} /> 
-        <Route path="/products" element={<ProductsPage products={products} setProducts={setProducts}/>}/>
+        <Route path="/products" element={<ProductsPage products={products} setProducts={setProducts} searchProducts={searchProducts}/>}/>
         <Route path='/products/:productId' element={<ProductDetailsPage products={products} setProducts={setProducts}/>}/>
         <Route path='/create-product' element={<CreateProduct/>}/>
         <Route path='/products/:productId/modify' element={<ModifyProductPage/>}/>

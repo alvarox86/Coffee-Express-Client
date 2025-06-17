@@ -4,7 +4,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import "./MyNavBar.css";
 import cafeicon from "../../assets/images/cafeicon.png";
-import axios from "axios";
 import service from "../../services/service.config";
 
 import AppBar from "@mui/material/AppBar";
@@ -26,14 +25,16 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Badge from '@mui/material/Badge';
-import { Button } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Badge from "@mui/material/Badge";
+import {Paper } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
-function MyNavBar({ products, setProducts }) {
+function MyNavBar({ setSearchProducts }) {
   const { isLoggedIn, loggedUserId, rol } = useContext(AuthContext);
 
   const navigate = useNavigate();
+  const [inputSearchValue, setInputSearchValue] = useState("");
 
   const { authenticateUser } = useContext(AuthContext);
 
@@ -58,19 +59,16 @@ function MyNavBar({ products, setProducts }) {
 
   //----------------Search Bar------------------
 
-  const handleInputChange = (event) => {
-    setProducts(event.target.value);
-  };
-
   const handleSearchButton = () => {
-    navigate("/products");
+    setSearchProducts(inputSearchValue); //Actualizamos el estado global
+    navigate("/products"); // y lo redirigimos a la página de productos
   };
 
   //--------------------------------------------
 
   const [userProfilePicture, setUserProfilePicture] = useState(null);
   const [userUserName, setUserUserName] = useState(null);
-  const [userCart, setUserCart] = useState([])
+  const [userCart, setUserCart] = useState([]);
 
   const params = useParams();
 
@@ -82,9 +80,11 @@ function MyNavBar({ products, setProducts }) {
     const storedToken = localStorage.getItem("authToken");
     try {
       if (AuthContext) {
-        const response = await service.get(`/user`,{ headers: { Authorization: `Bearer ${storedToken}` } });
-        
-        setUserCart(response.data.cart)
+        const response = await service.get(`/user`, {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        });
+
+        setUserCart(response.data.cart);
         setUserUserName(response.data.username);
         setUserProfilePicture(response.data.profilepicture);
       }
@@ -243,22 +243,54 @@ function MyNavBar({ products, setProducts }) {
             </Typography>
           </Box>
 
-          <Search className="searchBtnNavBar">
-            <SearchIconWrapper>
-            {/* value={products} onChange={handleInputChange} */}
-                <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
+          {/*Search bar */}
+
+          <Paper
+            component="form"
+            onSubmit={(e) => {
+              e.preventDefault(); // evita que recargue la página
+              handleSearchButton();
+            }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              width: { xs: "100%", sm: 300 }, //responsividad
+              height: 40,
+              boxShadow: 1,
+            }}
+          >
+            {/* Botón de limpiar solo visible si hay texto escrito */}
+            {inputSearchValue && (
+              <IconButton
+                onClick={() => {
+                  setInputSearchValue(""); // limpia el input
+                  setSearchProducts(""); // limpia el filtro aplicado
+                }}
+                sx={{ p: "10px" }}
+                aria-label="clear"
+              >
+                <CloseIcon />
+              </IconButton>
+            )}
+            <InputBase
+              sx={{ ml: 1, flex: 1 }}
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
+              value={inputSearchValue}
+              onChange={(e) => setInputSearchValue(e.target.value)}
             />
-          </Search>
+            <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+              <SearchIcon />
+            </IconButton>
+          </Paper>
 
-          {<IconButton aria-label="cart">
-            <Badge badgeContent={userCart.length} color="error">
-              <ShoppingCartIcon />
-            </Badge>
-          </IconButton>}
+          {
+            <IconButton aria-label="cart">
+              <Badge badgeContent={userCart.length} color="error">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+          }
 
           {/* Auth */}
           <Link
@@ -277,7 +309,7 @@ function MyNavBar({ products, setProducts }) {
                     alt="User"
                     style={{ width: "36px", borderRadius: "50%" }}
                   />
-                  <Typography variant="body1" >{userUserName}</Typography>
+                  <Typography variant="body1">{userUserName}</Typography>
                 </div>
                 <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
                   LogOut
