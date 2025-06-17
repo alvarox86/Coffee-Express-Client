@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
+import { UserContext } from "../../context/profile.context";
 import "./MyNavBar.css";
 import cafeicon from "../../assets/images/cafeicon.png";
 import service from "../../services/service.config";
@@ -19,7 +20,7 @@ import ListItem from "@mui/material/ListItem";
 import HomeIcon from "@mui/icons-material/Home";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoIcon from "@mui/icons-material/Info";
-import Face2Icon from "@mui/icons-material/Face2";
+import FreeBreakfastIcon from '@mui/icons-material/FreeBreakfast';
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
@@ -32,6 +33,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 function MyNavBar({ setSearchProducts }) {
   const { isLoggedIn, loggedUserId, rol } = useContext(AuthContext);
+  const { userName, userImgUrl, userCart} = useContext(UserContext)
 
   const navigate = useNavigate();
   const [inputSearchValue, setInputSearchValue] = useState("");
@@ -64,75 +66,6 @@ function MyNavBar({ setSearchProducts }) {
     navigate("/products"); // y lo redirigimos a la página de productos
   };
 
-  //--------------------------------------------
-
-  const [userProfilePicture, setUserProfilePicture] = useState(null);
-  const [userUserName, setUserUserName] = useState(null);
-  const [userCart, setUserCart] = useState([]);
-
-  const params = useParams();
-
-  useEffect(() => {
-    getData();
-  }, [loggedUserId]);
-
-  const getData = async () => {
-    const storedToken = localStorage.getItem("authToken");
-    try {
-      if (AuthContext) {
-        const response = await service.get(`/user`, {
-          headers: { Authorization: `Bearer ${storedToken}` },
-        });
-
-        setUserCart(response.data.cart);
-        setUserUserName(response.data.username);
-        setUserProfilePicture(response.data.profilepicture);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  //--------------------------------------------
-
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  }));
-
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    width: "100%",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      [theme.breakpoints.up("sm")]: {
-        width: "15ch",
-      },
-    },
-  }));
-
   /*SIDEBAR */
 
   const DrawerList = (
@@ -149,14 +82,31 @@ function MyNavBar({ setSearchProducts }) {
         </Link>
         <Divider />
         <Link
-          to={"/CharacterDetails/1"}
+          to={"/products"}
           style={{ textDecoration: "none", color: "black" }}
         >
           <ListItem>
-            <Face2Icon sx={{ paddingRight: "10px" }} /> Our Products
+            <FreeBreakfastIcon sx={{ paddingRight: "10px" }} /> Our Products
           </ListItem>
         </Link>
         <Divider />
+        <Link
+          to={`/cart`}
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <ListItem>
+            <ShoppingCartIcon sx={{ paddingRight: "10px" }} /> My cart
+          </ListItem>
+        </Link>
+        <Divider />
+        <Link
+          to={`/userprofile/${loggedUserId}`}
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <ListItem>
+            <AccountCircleIcon sx={{ paddingRight: "10px" }} /> User profile
+          </ListItem>
+        </Link>
         <Divider />
         <Link
           to={"https://github.com/alvarox86/Coffee-Express-Client"}
@@ -174,15 +124,6 @@ function MyNavBar({ setSearchProducts }) {
         >
           <ListItem>
             <InfoIcon sx={{ paddingRight: "10px" }} /> About the page
-          </ListItem>
-        </Link>
-        <Divider />
-        <Link
-          to={`/userprofile/${loggedUserId}`}
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          <ListItem>
-            <InfoIcon sx={{ paddingRight: "10px" }} /> User profile
           </ListItem>
         </Link>
         <Divider />
@@ -284,13 +225,11 @@ function MyNavBar({ setSearchProducts }) {
             </IconButton>
           </Paper>
 
-          {
-            <IconButton aria-label="cart">
-              <Badge badgeContent={userCart.length} color="error">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
-          }
+          {<IconButton aria-label="cart">
+            <Badge badgeContent={userCart} color="error">
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>}
 
           {/* Auth */}
           <Link
@@ -305,11 +244,11 @@ function MyNavBar({ setSearchProducts }) {
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <div className="loggedCard" key={loggedUserId}>
                   <img
-                    src={userProfilePicture}
+                    src={userImgUrl}
                     alt="User"
                     style={{ width: "36px", borderRadius: "50%" }}
                   />
-                  <Typography variant="body1">{userUserName}</Typography>
+                  <Typography variant="body1" >{userName}</Typography>
                 </div>
                 <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
                   LogOut

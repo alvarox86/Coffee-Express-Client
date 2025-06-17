@@ -1,16 +1,18 @@
-import { Box, Button, Divider, Paper, Typography } from "@mui/material";
+import { Alert, Box, Button, Divider, Paper, Typography,Snackbar } from "@mui/material";
 
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ReviewCard from "./ReviewCard";
 import CreateReview from "./CreateReview";
 import { AuthContext } from "../../context/auth.context";
 import service from "../../services/service.config";
+import { UserContext } from "../../context/profile.context";
 
 function ProductDetailsPage() {
   const { productId } = useParams();
   const {loggedUserId} = useContext(AuthContext)
+  const { getUserData } =  useContext(UserContext)
+  const [openSnackbar, setOpenSnackbar] = useState(false)
 
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -65,9 +67,18 @@ const handleDeleteReview = async (reviewId) => {
   if (!product) return <Typography>Products not found</Typography>;
   if (!reviews) return <Typography>Reviews not found </Typography>;
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+  setOpenSnackbar(false)
+  }
+  
   const handleAddCart = async () => {
     try {
       await service.patch(`/user/cart/${productId}/add`)
+      setOpenSnackbar(true)
+      getUserData()
     } catch (error) {
       console.log(error)
     }
@@ -187,6 +198,15 @@ const handleDeleteReview = async (reviewId) => {
           </Box>
         </Box>
       </Box>
+          <Snackbar
+        open={openSnackbar}
+        onClose={handleClose}
+        autoHideDuration={3000}
+      >
+        <Alert severity="success">
+          Product added to cart
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

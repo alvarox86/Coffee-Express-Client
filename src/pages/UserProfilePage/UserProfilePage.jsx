@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from "react";
-import axios from "axios";
 import { AuthContext } from "../../context/auth.context";
 import "./UserProfilePage.css"
 import { Link, useParams } from "react-router-dom";

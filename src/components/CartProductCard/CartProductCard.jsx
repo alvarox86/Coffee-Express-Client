@@ -1,6 +1,6 @@
 import "./CartProductCard.css"
 
-function CartProductCard({eachCardData}) {
+function CartProductCard({eachCardData, handleDeleteCartProduct}) {
 
   return (
     <div key={eachCardData._id} className="cartProductCard">
@@ -12,6 +12,9 @@ function CartProductCard({eachCardData}) {
         <div>
             <img src={eachCardData.imageUrl} alt="Product picture" className="imgProductCart"/>
         </div>
+        <button onClick={()=> handleDeleteCartProduct(eachCardData._id)}>
+          Delete
+        </button>
     </div>
   )
 }
