@@ -4,12 +4,13 @@ import { AuthContext } from "../../context/auth.context";
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate, Link } from "react-router-dom";
 import service from "../../services/service.config";
+import { UserContext } from "../../context/profile.context";
 
 function EditProfilePage() {
     const navigate = useNavigate()
 
     const { loggedUserId } = useContext(AuthContext);
-
+    const { getUserData } =  useContext(UserContext)
     const [isUploading, setIsUploading] = useState(false);
     
     const [usernameInputValue, setUsernameInputValue] = useState("")
@@ -64,6 +65,7 @@ function EditProfilePage() {
 
         try {
             await service.patch(`/user`, updatedProfile,{ headers: { Authorization: `Bearer ${storedToken}` } })
+            getUserData()
             navigate(`/userprofile/${loggedUserId}`)
             
         } catch (error) {

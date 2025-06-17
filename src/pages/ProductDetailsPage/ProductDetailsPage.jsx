@@ -7,10 +7,12 @@ import ReviewCard from "./ReviewCard";
 import CreateReview from "./CreateReview";
 import { AuthContext } from "../../context/auth.context";
 import service from "../../services/service.config";
+import { UserContext } from "../../context/profile.context";
 
 function ProductDetailsPage() {
   const { productId } = useParams();
   const {loggedUserId} = useContext(AuthContext)
+  const { getUserData } =  useContext(UserContext)
 
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -68,6 +70,7 @@ const handleDeleteReview = async (reviewId) => {
   const handleAddCart = async () => {
     try {
       await service.patch(`/user/cart/${productId}/add`)
+      getUserData()
     } catch (error) {
       console.log(error)
     }

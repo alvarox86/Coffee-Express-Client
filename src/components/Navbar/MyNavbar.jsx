@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
+import { UserContext } from "../../context/profile.context";
 import "./MyNavBar.css";
 import cafeicon from "../../assets/images/cafeicon.png";
-import axios from "axios";
 import service from "../../services/service.config";
 
 import AppBar from "@mui/material/AppBar";
@@ -20,7 +20,7 @@ import ListItem from "@mui/material/ListItem";
 import HomeIcon from "@mui/icons-material/Home";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoIcon from "@mui/icons-material/Info";
-import Face2Icon from "@mui/icons-material/Face2";
+import FreeBreakfastIcon from '@mui/icons-material/FreeBreakfast';
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
@@ -30,8 +30,10 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
 import { Button } from "@mui/material";
 
+
 function MyNavBar({ products, setProducts }) {
   const { isLoggedIn, loggedUserId, rol } = useContext(AuthContext);
+  const { userName, userImgUrl, userCart} = useContext(UserContext)
 
   const navigate = useNavigate();
 
@@ -65,35 +67,6 @@ function MyNavBar({ products, setProducts }) {
   const handleSearchButton = () => {
     navigate("/products");
   };
-
-  //--------------------------------------------
-
-  const [userProfilePicture, setUserProfilePicture] = useState(null);
-  const [userUserName, setUserUserName] = useState(null);
-  const [userCart, setUserCart] = useState([])
-
-  const params = useParams();
-
-  useEffect(() => {
-    getData();
-  }, [loggedUserId]);
-
-  const getData = async () => {
-    const storedToken = localStorage.getItem("authToken");
-    try {
-      if (AuthContext) {
-        const response = await service.get(`/user`,{ headers: { Authorization: `Bearer ${storedToken}` } });
-        
-        setUserCart(response.data.cart)
-        setUserUserName(response.data.username);
-        setUserProfilePicture(response.data.profilepicture);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  //--------------------------------------------
 
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -149,14 +122,31 @@ function MyNavBar({ products, setProducts }) {
         </Link>
         <Divider />
         <Link
-          to={"/CharacterDetails/1"}
+          to={"/products"}
           style={{ textDecoration: "none", color: "black" }}
         >
           <ListItem>
-            <Face2Icon sx={{ paddingRight: "10px" }} /> Our Products
+            <FreeBreakfastIcon sx={{ paddingRight: "10px" }} /> Our Products
           </ListItem>
         </Link>
         <Divider />
+        <Link
+          to={`/cart`}
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <ListItem>
+            <ShoppingCartIcon sx={{ paddingRight: "10px" }} /> My cart
+          </ListItem>
+        </Link>
+        <Divider />
+        <Link
+          to={`/userprofile/${loggedUserId}`}
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <ListItem>
+            <AccountCircleIcon sx={{ paddingRight: "10px" }} /> User profile
+          </ListItem>
+        </Link>
         <Divider />
         <Link
           to={"https://github.com/alvarox86/Coffee-Express-Client"}
@@ -174,15 +164,6 @@ function MyNavBar({ products, setProducts }) {
         >
           <ListItem>
             <InfoIcon sx={{ paddingRight: "10px" }} /> About the page
-          </ListItem>
-        </Link>
-        <Divider />
-        <Link
-          to={`/userprofile/${loggedUserId}`}
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          <ListItem>
-            <InfoIcon sx={{ paddingRight: "10px" }} /> User profile
           </ListItem>
         </Link>
         <Divider />
@@ -255,7 +236,7 @@ function MyNavBar({ products, setProducts }) {
           </Search>
 
           {<IconButton aria-label="cart">
-            <Badge badgeContent={userCart.length} color="error">
+            <Badge badgeContent={userCart} color="error">
               <ShoppingCartIcon />
             </Badge>
           </IconButton>}
@@ -273,11 +254,11 @@ function MyNavBar({ products, setProducts }) {
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <div className="loggedCard" key={loggedUserId}>
                   <img
-                    src={userProfilePicture}
+                    src={userImgUrl}
                     alt="User"
                     style={{ width: "36px", borderRadius: "50%" }}
                   />
-                  <Typography variant="body1" >{userUserName}</Typography>
+                  <Typography variant="body1" >{userName}</Typography>
                 </div>
                 <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
                   LogOut

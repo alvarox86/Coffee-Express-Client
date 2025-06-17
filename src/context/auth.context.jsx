@@ -52,7 +52,7 @@ function AuthWrapper(props) {
 
   if (isValidatingToken) {
     return (
-      <h3>... validando usuario</h3>
+      <h3>... Validando usuario</h3>
     )
   }
 
