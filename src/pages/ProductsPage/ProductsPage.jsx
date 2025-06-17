@@ -7,6 +7,7 @@ import { Box, Container, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import service from "../../services/service.config";
 
+
 function ProductsPage({products, setProducts}) {
  
 

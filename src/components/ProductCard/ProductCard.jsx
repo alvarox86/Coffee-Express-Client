@@ -13,9 +13,8 @@ function ProductCard({ product }) {
         component="img"
         alt={product.name}
         height="200"
-        image={
-          product.imgUrl ||
-          "https://res.cloudinary.com/dotfm1go0/image/upload/v1749917582/default-image_600_u1nizl.webp"
+        src={
+          product.imageUrl
         }
       />
       <CardContent>

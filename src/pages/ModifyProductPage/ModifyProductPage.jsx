@@ -102,7 +102,7 @@ function ModifyProductPage() {
         },
       });
       console.log("producto eliminado");
-      navigate("/products");
+      navigate("/products", { state: { updated: true } });
     } catch (error) {
       console.log(error);
     }
