@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
-import "./MyNavBar.css";
+import "./MyNavbar.css";
 import cafeicon from "../../assets/images/cafeicon.png";
 import axios from "axios";
 
