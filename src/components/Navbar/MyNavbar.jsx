@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/auth.context";
 import "./MyNavBar.css";
 import cafeicon from "../../assets/images/cafeicon.png";
 import axios from "axios";
+import service from "../../services/service.config";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -81,10 +82,7 @@ function MyNavBar({ products, setProducts }) {
     const storedToken = localStorage.getItem("authToken");
     try {
       if (AuthContext) {
-        const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/api/user`,
-          { headers: { Authorization: `Bearer ${storedToken}` } }
-        );
+        const response = await service.get(`/user`,{ headers: { Authorization: `Bearer ${storedToken}` } });
         
         setUserCart(response.data.cart)
         setUserUserName(response.data.username);

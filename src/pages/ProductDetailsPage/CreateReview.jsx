@@ -3,6 +3,7 @@ import { AuthContext } from "../../context/auth.context";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import service from "../../services/service.config";
 
 function CreateReview({fetchReviews}) {
   const { productId } = useParams();
@@ -33,9 +34,7 @@ function CreateReview({fetchReviews}) {
     const storedToken = localStorage.getItem("authToken");
     try {
       if (storedToken) {
-        await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/api/review`,
-          newReview,
+        await service.post(`/review`,newReview,
           {
             headers: {
               Authorization: `Bearer ${storedToken} `,

@@ -5,6 +5,7 @@ import ProductCard from "../../components/ProductCard/ProductCard";
 
 import { Box, Container, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
+import service from "../../services/service.config";
 
 function ProductsPage({products, setProducts}) {
  
@@ -12,7 +13,7 @@ function ProductsPage({products, setProducts}) {
   useEffect(() => {
     const fetchProducts = async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/product`);
+            const response = await service.get(`/product`);
             setProducts(response.data);
         } catch (error) {
             console.log(error)

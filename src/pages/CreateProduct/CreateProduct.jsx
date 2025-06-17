@@ -1,8 +1,8 @@
 import { Box, Button, MenuItem, Stack, TextField, Typography } from "@mui/material";
-import axios from "axios";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
+import service from "../../services/service.config";
 
 function CreateProduct() {
   const { loggedUserId } = useContext(AuthContext);
@@ -42,9 +42,7 @@ function CreateProduct() {
       if (storedToken) {
         console.log(" Info del producto", newProduct);
 
-        await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/api/product`,
-          newProduct,
+        await service.post(`/product`,newProduct,
           {
             headers: {
               Authorization: `Bearer ${storedToken} `,

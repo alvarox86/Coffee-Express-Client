@@ -3,6 +3,7 @@ import axios from "axios";
 import { AuthContext } from "../../context/auth.context";
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate, Link } from "react-router-dom";
+import service from "../../services/service.config";
 
 function EditProfilePage() {
     const navigate = useNavigate()
@@ -35,7 +36,7 @@ function EditProfilePage() {
 
         try {
             if(storedToken){
-                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/user`,{ headers: { Authorization: `Bearer ${storedToken}` } });
+                const response = await service.get(`/user`,{ headers: { Authorization: `Bearer ${storedToken}` } });
                 setUsernameInputValue(response.data.username)
                 setPhoneInputValue(response.data.phone)
                 setAdressInputValue(response.data.adress)
@@ -62,7 +63,7 @@ function EditProfilePage() {
         }
 
         try {
-            await axios.patch(`${import.meta.env.VITE_SERVER_URL}/api/user`, updatedProfile,{ headers: { Authorization: `Bearer ${storedToken}` } })
+            await service.patch(`/user`, updatedProfile,{ headers: { Authorization: `Bearer ${storedToken}` } })
             navigate(`/userprofile/${loggedUserId}`)
             
         } catch (error) {
@@ -82,7 +83,7 @@ function EditProfilePage() {
         uploadData.append("image", event.target.files[0] )
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/upload`, uploadData)
+            const response = await service.post(`/upload`, uploadData)
 
             setImageUrl(response.data.imageUrl)
             setIsUploading(false)

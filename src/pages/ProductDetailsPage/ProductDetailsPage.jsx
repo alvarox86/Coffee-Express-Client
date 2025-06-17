@@ -18,8 +18,8 @@ function ProductDetailsPage() {
 
     const fetchProduct = async () => {
       try {
-        const productResponse = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/api/product/${productId}`
+        const productResponse = await service.get(
+          `/product/${productId}`
         );
         setProduct(productResponse.data);
       } catch (error) {
@@ -29,8 +29,7 @@ function ProductDetailsPage() {
 
     const fetchReviews = async () => {
       try {
-        const reviewResponse = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/api/review/product/${productId}`
+        const reviewResponse = await service.get(`/review/product/${productId}`
         );
         setReviews(reviewResponse.data);
       } catch (error) {
@@ -42,7 +41,7 @@ function ProductDetailsPage() {
 const handleDeleteReview = async (reviewId) => {
   const storedToken = localStorage.getItem("authToken");
   try {
-    await axios.delete(`${import.meta.env.VITE_SERVER_URL}/api/review/${reviewId}`, {
+    await service.delete(`/review/${reviewId}`, {
       headers: {
         Authorization: `Bearer ${storedToken}`,
       }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios';
 import CartProductCard from '../../components/CartProductCard/CartProductCard';
+import service from '../../services/service.config';
 
 function CartPage() {
  const [cartData, setCartData] = useState([])
@@ -14,8 +15,8 @@ function CartPage() {
     
     try {
       if(storedToken){
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/user/cart`,{ headers: { Authorization: `Bearer ${storedToken}` } });
-        console.log(response.data)
+        const response = await service.get(`/user/cart`,{ headers: { Authorization: `Bearer ${storedToken}` } });
+
         setCartData(response.data)
       }
     } catch (error) {

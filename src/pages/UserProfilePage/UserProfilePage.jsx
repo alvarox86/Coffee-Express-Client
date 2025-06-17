@@ -22,7 +22,7 @@ function UserProfilePage() {
 
         try {
             if(storedToken){
-                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/user`,{ headers: { Authorization: `Bearer ${storedToken}` } });
+                const response = await service.get(`/user`,{ headers: { Authorization: `Bearer ${storedToken}` } });
                 setUserUserName(response.data.username);
                 setUserProfilePicture(response.data.profilepicture);
                 setUserPhone(response.data.phone)
