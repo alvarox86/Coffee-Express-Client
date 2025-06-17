@@ -73,6 +73,7 @@ const handleDeleteReview = async (reviewId) => {
     }
   setOpenSnackbar(false)
   }
+  
   const handleAddCart = async () => {
     try {
       await service.patch(`/user/cart/${productId}/add`)

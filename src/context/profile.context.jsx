@@ -31,8 +31,6 @@ function UserWrapper(props){
         getUserData
     }
 
-    console.log(passedContext)
-
     return(
         <UserContext.Provider value={passedContext}>
             {props.children}

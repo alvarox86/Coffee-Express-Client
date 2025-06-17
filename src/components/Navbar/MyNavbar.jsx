@@ -5,7 +5,6 @@ import { AuthContext } from "../../context/auth.context";
 import { UserContext } from "../../context/profile.context";
 import "./MyNavBar.css";
 import cafeicon from "../../assets/images/cafeicon.png";
-import service from "../../services/service.config";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
