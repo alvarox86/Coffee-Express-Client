@@ -28,6 +28,7 @@ function UserWrapper(props){
         userName,
         userImgUrl,
         userCart,
+        setUserCart,
         getUserData
     }
 

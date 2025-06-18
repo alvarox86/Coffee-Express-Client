@@ -1,8 +1,9 @@
 import { useEffect, useState, useContext } from 'react'
-import axios from 'axios';
 import CartProductCard from '../../components/CartProductCard/CartProductCard';
 import service from '../../services/service.config';
 import { UserContext } from '../../context/profile.context';
+
+import "./CartPage.css"
 
 function CartPage() {
  const [cartData, setCartData] = useState([])
@@ -28,6 +29,7 @@ function CartPage() {
   const handleDeleteCartProduct = async (productId) =>{
     try {
       await service.patch(`/user/cart/${productId}/remove`)
+        getData()
         getUserData()
     } catch (error) {
       console.log(error)

@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-
 import ProductCard from "../../components/ProductCard/ProductCard";
 
 import { Box, Container, Typography } from "@mui/material";
