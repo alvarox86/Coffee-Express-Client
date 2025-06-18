@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
+import  { useContext, useState } from "react";
 import { AuthContext } from "../../context/auth.context";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import service from "../../services/service.config";
 

@@ -15,6 +15,8 @@ function AuthWrapper(props) {
   //false y null porque asumimos que es un extraño (quizas más adelante lo validemos)
 
   const authenticateUser = async () => {
+    setIsValidatingToken(true)
+
     // funcion para validar el token del usuario y saber quien es y actualiza los estados
     try {
       const response = await service.get(`/auth/verify`);

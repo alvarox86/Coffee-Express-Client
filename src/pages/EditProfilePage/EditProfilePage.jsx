@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from "react";
-import axios from "axios";
 import { AuthContext } from "../../context/auth.context";
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate, Link } from "react-router-dom";

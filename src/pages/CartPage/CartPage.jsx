@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from 'react'
-import axios from 'axios';
 import CartProductCard from '../../components/CartProductCard/CartProductCard';
 import service from '../../services/service.config';
 import { UserContext } from '../../context/profile.context';

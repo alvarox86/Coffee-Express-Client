@@ -32,7 +32,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 function MyNavBar({ setSearchProducts }) {
   const { isLoggedIn, loggedUserId, rol } = useContext(AuthContext);
-  const { userName, userImgUrl, userCart} = useContext(UserContext)
+  const { userName, userImgUrl, userCart , setUserCart} = useContext(UserContext)
 
   const navigate = useNavigate();
   const [inputSearchValue, setInputSearchValue] = useState("");
@@ -48,10 +48,10 @@ function MyNavBar({ setSearchProducts }) {
   /*LOG OUT */
   const handleLogout = async () => {
     localStorage.removeItem("authToken");
-
+    
     try {
       await authenticateUser();
-
+      setUserCart(null)
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -226,7 +226,9 @@ function MyNavBar({ setSearchProducts }) {
 
           {<IconButton aria-label="cart">
             <Badge badgeContent={userCart} color="error">
-              <ShoppingCartIcon />
+              <Link to="/cart">
+                <ShoppingCartIcon sx={{textDecoration:"none", color:"grey"}}/>
+              </Link>
             </Badge>
           </IconButton>}
 
