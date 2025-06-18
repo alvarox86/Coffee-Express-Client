@@ -35,7 +35,7 @@ function AuthWrapper(props) {
       }else {
         console.log("Error verifying token:", error.message);
       }
-
+      console.log(error)
 
       // si la llamada llega a este punto significa que el token no existe, no es valido o expiró
       setIsLoggedIn(false);

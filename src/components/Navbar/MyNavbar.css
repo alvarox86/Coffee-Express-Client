@@ -6,3 +6,13 @@ header{
     display: flex !important;
     justify-content: space-evenly !important;
 }
+
+@media (max-width: 768px){
+    .h1NameApp{
+        display: none;
+    }
+    .imgIcon{
+        height: 50px !important;
+        width: 50px;
+    }
+}

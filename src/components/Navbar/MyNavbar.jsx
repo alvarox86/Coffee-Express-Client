@@ -29,6 +29,9 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Badge from "@mui/material/Badge";
 import {Paper } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 function MyNavBar({ setSearchProducts }) {
   const { isLoggedIn, loggedUserId, rol } = useContext(AuthContext);
@@ -63,6 +66,17 @@ function MyNavBar({ setSearchProducts }) {
   const handleSearchButton = () => {
     setSearchProducts(inputSearchValue); //Actualizamos el estado global
     navigate("/products"); // y lo redirigimos a la página de productos
+  };
+
+  //----------------Profile Menu------------------
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   /*SIDEBAR */
@@ -173,13 +187,14 @@ function MyNavBar({ setSearchProducts }) {
               src={cafeicon}
               alt="LogoPagina"
               style={{ height: "80px", marginRight: "20px" }}
+              className="imgIcon"
             />
             <Typography
               variant="h6"
               component="div"
               sx={{ fontWeight: "bold" }}
             >
-              <h1>Coffee Express</h1>
+              <h1 className="h1NameApp">Coffee Express</h1>
             </Typography>
           </Box>
 
@@ -233,35 +248,48 @@ function MyNavBar({ setSearchProducts }) {
           </IconButton>}
 
           {/* Auth */}
-          <Link
-            to={"/signup"}
-            style={{
-              textDecoration: "none",
-              color: "black",
-              marginLeft: "20px",
-            }}
-          >
+          
             {isLoggedIn === true ? (
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <div className="loggedCard" key={loggedUserId}>
-                  <img
-                    src={userImgUrl}
-                    alt="User"
-                    style={{ width: "36px", borderRadius: "50%" }}
-                  />
-                  <Typography variant="body1" >{userName}</Typography>
-                </div>
-                <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
-                  LogOut
-                </button>
+                <Box className="loggedCard" key={loggedUserId}>
+                  <Button onClick={handleClick}>
+                    <img src={userImgUrl} alt="User" style={{ width: "36px", borderRadius: "50%" }}/>
+                    <Typography variant="body1" sx={{textDecoration:"none", color:"black"}}>{userName}</Typography>
+                  </Button>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={openMenu}
+                    onClose={handleClose}
+                    slotProps={{
+                      list: {
+                        'aria-labelledby': 'basic-button',
+                      },
+                    }}
+                  >
+                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    <MenuItem onClick={handleClose}>My account</MenuItem>
+                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                  </Menu>
+
+                </Box>
               </Box>
             ) : (
               <>
-                <AccountCircleIcon sx={{ width: "50px", height: "50px" }} />
-                <Typography variant="body1">Sign Up</Typography>
+                <Link
+                  to={"/signup"}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    marginLeft: "20px",
+                  }}
+                >
+                  <AccountCircleIcon sx={{ width: "50px", height: "50px" }} />
+                  <Typography variant="body1">Sign Up</Typography>
+                </Link>
               </>
             )}
-          </Link>
+          
         </Toolbar>
       </AppBar>
 

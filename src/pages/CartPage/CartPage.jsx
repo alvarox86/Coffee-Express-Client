@@ -3,6 +3,8 @@ import CartProductCard from '../../components/CartProductCard/CartProductCard';
 import service from '../../services/service.config';
 import { UserContext } from '../../context/profile.context';
 
+import "./CartPage.css"
+
 function CartPage() {
  const [cartData, setCartData] = useState([])
  const { getUserData } =  useContext(UserContext)
