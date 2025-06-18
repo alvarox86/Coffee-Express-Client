@@ -28,6 +28,7 @@ function CartPage() {
   const handleDeleteCartProduct = async (productId) =>{
     try {
       await service.patch(`/user/cart/${productId}/remove`)
+        getData()
         getUserData()
     } catch (error) {
       console.log(error)
