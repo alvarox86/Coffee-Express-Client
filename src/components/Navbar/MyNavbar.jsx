@@ -254,7 +254,7 @@ function MyNavBar({ setSearchProducts }) {
                 <Box className="loggedCard" key={loggedUserId}>
                   <Button onClick={handleClick}>
                     <img src={userImgUrl} alt="User" style={{ width: "36px", borderRadius: "50%" }}/>
-                    <Typography variant="body1" sx={{textDecoration:"none", color:"black"}}>{userName}</Typography>
+                    <Typography variant="body1" sx={{textDecoration:"none", color:"black", paddingLeft:"10px"}}>{userName}</Typography>
                   </Button>
                   <Menu
                     id="basic-menu"
@@ -267,9 +267,10 @@ function MyNavBar({ setSearchProducts }) {
                       },
                     }}
                   >
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <Link to={`/userprofile/${loggedUserId}`} style={{ textDecoration: "none", color: "black" }}>
+                      <MenuItem>Profile</MenuItem>
+                    </Link>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </Menu>
 
                 </Box>
