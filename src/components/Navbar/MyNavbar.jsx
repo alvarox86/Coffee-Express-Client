@@ -4,8 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { UserContext } from "../../context/profile.context";
 import "./MyNavBar.css";
-import cafeicon from "../../assets/images/cafeicon.png";
-
+import cafeicon from "../../assets/images/iconlogo_bsqf1c.png";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -20,22 +19,23 @@ import ListItem from "@mui/material/ListItem";
 import HomeIcon from "@mui/icons-material/Home";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoIcon from "@mui/icons-material/Info";
-import FreeBreakfastIcon from '@mui/icons-material/FreeBreakfast';
+import FreeBreakfastIcon from "@mui/icons-material/FreeBreakfast";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Badge from "@mui/material/Badge";
-import {Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 function MyNavBar({ setSearchProducts }) {
   const { isLoggedIn, loggedUserId, rol } = useContext(AuthContext);
-  const { userName, userImgUrl, userCart , setUserCart} = useContext(UserContext)
+  const { userName, userImgUrl, userCart, setUserCart } =
+    useContext(UserContext);
 
   const navigate = useNavigate();
   const [inputSearchValue, setInputSearchValue] = useState("");
@@ -51,10 +51,10 @@ function MyNavBar({ setSearchProducts }) {
   /*LOG OUT */
   const handleLogout = async () => {
     localStorage.removeItem("authToken");
-    
+
     try {
       await authenticateUser();
-      setUserCart(null)
+      setUserCart(null);
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -103,10 +103,7 @@ function MyNavBar({ setSearchProducts }) {
           </ListItem>
         </Link>
         <Divider />
-        <Link
-          to={`/cart`}
-          style={{ textDecoration: "none", color: "black" }}
-        >
+        <Link to={`/cart`} style={{ textDecoration: "none", color: "black" }}>
           <ListItem>
             <ShoppingCartIcon sx={{ paddingRight: "10px" }} /> My cart
           </ListItem>
@@ -160,13 +157,14 @@ function MyNavBar({ setSearchProducts }) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" color="default">
+      <AppBar position="fixed" color="default" > 
         <Toolbar
           className="toolBar"
           sx={{
-            minHeight: "60px",
+            minHeight: "70px",
             display: "flex",
             justifyContent: "space-between",
+            
           }}
         >
           <IconButton
@@ -174,7 +172,7 @@ function MyNavBar({ setSearchProducts }) {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{ ml: 1  }}
           >
             <MenuIcon onClick={toggleDrawer(true)} />
             <Drawer open={open} onClose={toggleDrawer(false)}>
@@ -182,19 +180,20 @@ function MyNavBar({ setSearchProducts }) {
             </Drawer>
           </IconButton>
 
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ display: "flex", alignItems: "flex-end", flexGrow: 1, ml: 4}}>
             <img
               src={cafeicon}
               alt="LogoPagina"
-              style={{ height: "80px", marginRight: "20px" }}
+              style={{ width: "50px", marginRight: "15px" }}
               className="imgIcon"
             />
             <Typography
-              variant="h6"
-              component="div"
-              sx={{ fontWeight: "bold" }}
+              className="h1NameApp"
+              variant="h4"
+              component="h1"
+              sx={{ fontWeight: "bold", pb: "4px" }}
             >
-              <h1 className="h1NameApp">Coffee Express</h1>
+              Coffee Express
             </Typography>
           </Box>
 
@@ -212,6 +211,7 @@ function MyNavBar({ setSearchProducts }) {
               width: { xs: "100%", sm: 300 }, //responsividad
               height: 40,
               boxShadow: 1,
+              mr: 6,
             }}
           >
             {/* Botón de limpiar solo visible si hay texto escrito */}
@@ -239,57 +239,68 @@ function MyNavBar({ setSearchProducts }) {
             </IconButton>
           </Paper>
 
-          {<IconButton aria-label="cart">
-            <Badge badgeContent={userCart} color="error">
-              <Link to="/cart">
-                <ShoppingCartIcon sx={{textDecoration:"none", color:"grey"}}/>
-              </Link>
-            </Badge>
-          </IconButton>}
+          {
+            <IconButton aria-label="cart" sx={{ mr: 3 }}>
+              <Badge badgeContent={userCart} color="error">
+                <Link to="/cart">
+                  <ShoppingCartIcon
+                    sx={{color: "grey" }}
+                  />
+                </Link>
+              </Badge>
+            </IconButton>
+          }
 
           {/* Auth */}
-          
-            {isLoggedIn === true ? (
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Box className="loggedCard" key={loggedUserId}>
-                  <Button onClick={handleClick}>
-                    <img src={userImgUrl} alt="User" style={{ width: "36px", borderRadius: "50%" }}/>
-                    <Typography variant="body1" sx={{textDecoration:"none", color:"black"}}>{userName}</Typography>
-                  </Button>
-                  <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={openMenu}
-                    onClose={handleClose}
-                    slotProps={{
-                      list: {
-                        'aria-labelledby': 'basic-button',
-                      },
-                    }}
-                  >
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
-                  </Menu>
 
-                </Box>
-              </Box>
-            ) : (
-              <>
-                <Link
-                  to={"/signup"}
-                  style={{
-                    textDecoration: "none",
-                    color: "black",
-                    marginLeft: "20px",
+          {isLoggedIn === true ? (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Box className="loggedCard" key={loggedUserId}>
+                <Button onClick={handleClick}>
+                  <img
+                    src={userImgUrl}
+                    alt="User"
+                    style={{ width: "36px", borderRadius: "50%" }}
+                  />
+                  <Typography
+                    variant="body1"
+                    sx={{ textDecoration: "none", color: "black" }}
+                  >
+                    {userName}
+                  </Typography>
+                </Button>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={openMenu}
+                  onClose={handleClose}
+                  slotProps={{
+                    list: {
+                      "aria-labelledby": "basic-button",
+                    },
                   }}
                 >
-                  <AccountCircleIcon sx={{ width: "50px", height: "50px" }} />
-                  <Typography variant="body1">Sign Up</Typography>
-                </Link>
-              </>
-            )}
-          
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleClose}>Logout</MenuItem>
+                </Menu>
+              </Box>
+            </Box>
+          ) : (
+            <>
+              <Link
+                to={"/signup"}
+                style={{
+                  textDecoration: "none",
+                  color: "black",
+                  marginLeft: "20px",
+                }}
+              >
+                <AccountCircleIcon sx={{ width: "50px", height: "50px" }} />
+                <Typography variant="body1">Sign Up</Typography>
+              </Link>
+            </>
+          )}
         </Toolbar>
       </AppBar>
 

@@ -113,7 +113,7 @@ function CartPage() {
                   backgroundColor: "#f2e8df",
                 }}
               >
-                Add products here
+                See our products here
               </Button>
             </Box>
           ) : (
