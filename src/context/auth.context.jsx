@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import service from "../services/service.config";
 import { CircularProgress, Box } from "@mui/material";
 
-// el componente que comparte los estados del contexto por toda la app
+
 const AuthContext = createContext();
 
 // el componente que almacena y controla los estados del contexto
@@ -12,7 +12,7 @@ function AuthWrapper(props) {
   const [rol, setRol] = useState(null);
 
   const [isValidatingToken, setIsValidatingToken] = useState(true);
-  //false y null porque asumimos que es un extraño (quizas más adelante lo validemos)
+
 
   const authenticateUser = async () => {
     // funcion para validar el token del usuario y saber quien es y actualiza los estados

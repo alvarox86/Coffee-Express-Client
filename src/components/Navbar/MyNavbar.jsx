@@ -118,7 +118,7 @@ function MyNavBar({ setSearchProducts }) {
         </Link>
         <Divider />
         <Link
-          to={"/AboutPage"}
+          to={"/aboutus"}
           style={{ textDecoration: "none", color: "black" }}
         >
           <ListItem>

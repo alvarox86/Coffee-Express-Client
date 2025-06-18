@@ -53,7 +53,7 @@ function ModifyProductPage() {
       } catch (error) {
         if (error.response.status) {
           alert("Access denied.");
-          navigate("/products"); // o cualquier ruta que quieras
+          navigate("/products"); 
         } else {
           console.log(error);
         }

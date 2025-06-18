@@ -6,14 +6,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import service from "../../services/service.config";
 
 function CreateProduct() {
-  const { loggedUserId } = useContext(AuthContext);
+  const { loggedUserId, rol } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (rol !== "vendor") {
+      alert("Access denied.");
+      navigate("/products");
+    }
+  }, [rol]);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -58,16 +65,14 @@ function CreateProduct() {
           },
         });
       }
-      console.log("producto añadido correctamente");
 
       navigate("/products");
     } catch (error) {
       console.log(error);
-      console.error("Error al crear producto");
     }
   };
 
-   const handleFileUpload = async (event) => {
+  const handleFileUpload = async (event) => {
     console.log("The file to be uploaded is: ", event.target.files[0]);
 
     if (!event.target.files[0]) {

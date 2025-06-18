@@ -2,12 +2,15 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../context/auth.context";
 import { useNavigate } from "react-router-dom";
 import service from "../../services/service.config";
+import { UserContext } from "../../context/profile.context";
 
 function LoginPage() {
 
   const navigate = useNavigate()
 
   const { authenticateUser } = useContext(AuthContext)
+
+  const {getUserData} = useContext(UserContext)
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,6 +21,7 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
 
     // ... contactar al backend para validar credenciales de usuario aqui
 
@@ -37,6 +41,7 @@ function LoginPage() {
       await authenticateUser()
 
       // 3. redireccionamos al usuario a alguna pagina privada
+          getUserData();
       navigate("/")
       
     } catch (error) {

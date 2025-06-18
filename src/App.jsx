@@ -13,6 +13,7 @@ import { useState } from 'react'
 import CartPage from './pages/CartPage/CartPage'
 import CreateProduct from './pages/CreateProduct/CreateProduct'
 import ModifyProductPage from './pages/ModifyProductPage/ModifyProductPage'
+import AboutPage from './pages/AboutPage/AboutPage'
 
 function App() {
    const [products, setProducts] = useState([]);
@@ -23,7 +24,7 @@ function App() {
       <MyNavbar products={products} setProducts={setProducts} setSearchProducts={setSearchProducts}/>
 
       <Routes>
-        <Route path='/' element={<HomePage/>} />
+        <Route path='/' element={<HomePage />} />
         <Route path='/signup' element={<SignupPage/>} />
         <Route path='/login' element={<LoginPage/>} />
         <Route path='/userprofile/:userId' element={<UserProfilePage/>} />
@@ -33,7 +34,7 @@ function App() {
         <Route path='/create-product' element={<CreateProduct/>}/>
         <Route path='/products/:productId/modify' element={<ModifyProductPage/>}/>
         <Route path='/cart' element={<CartPage/>}/>
-
+        <Route path='/aboutus' element={<AboutPage/>}/>
         <Route path='*' element={<NotFoundPage/>} />
       </Routes>
     </>

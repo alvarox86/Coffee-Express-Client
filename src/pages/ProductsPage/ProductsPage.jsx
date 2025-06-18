@@ -8,10 +8,9 @@ import Grid from "@mui/material/Grid";
 import service from "../../services/service.config";
 
 function ProductsPage({ products, setProducts, searchProducts }) {
-
   const filteredProducts = products.filter((product) => {
-     return product.name.toLowerCase().includes(searchProducts.toLowerCase());
-  })
+    return product.name.toLowerCase().includes(searchProducts.toLowerCase());
+  });
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -26,19 +25,19 @@ function ProductsPage({ products, setProducts, searchProducts }) {
   }, []);
 
   return (
-    <Box sx={{ minHeight: "100vh", py: 6 }}>
-      <Container>
+    <Box sx={{ py: 5 }}>
+      
+      <Container sx={{Height: "100px"}}>
         <Typography
-          variant="h3"
-          fontWeight="bold"
-          textAlign="center"
-          sx={{ mb: 4, color: "#8B5042" }}
-        >
-          Our Coffee Selection
-        </Typography>
-
+        variant="h2"
+        fontWeight="bold"
+        textAlign="center"
+        sx={{ mb: 6, color: "#D9A689", letterSpacing: 1 }}
+      >
+        Our Coffee Selection
+      </Typography>
         {filteredProducts.length > 0 ? (
-          <Grid container spacing={4} justifyContent="center">
+          <Grid container spacing={4} justifyContent="center" >
             {filteredProducts.map((product) => (
               <Grid key={product._id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
                 <ProductCard product={product} />
