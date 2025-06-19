@@ -130,7 +130,22 @@ function ProductDetailsPage() {
             Type: {product.type}
           </Typography>
 
-          <Button
+          {product.stock <= 0 ? (
+            <Button
+            disabled
+            variant="contained"
+            size="large"
+            sx={{
+              backgroundColor: "#8B5042",
+              color: "white",
+              mt: 3,
+              "&:hover": {
+                backgroundColor: "#6c3a2f",
+              },
+            }}
+            onClick={handleAddCart}
+          >Out of stock</Button>
+          ) : (<Button
             variant="contained"
             size="large"
             sx={{
@@ -144,7 +159,8 @@ function ProductDetailsPage() {
             onClick={handleAddCart}
           >
             Add Cart
-          </Button>
+          </Button>)}
+          
           {rol === "vendor" && (
             <Link to={`/products/${productId}/modify`}>
               <Button
