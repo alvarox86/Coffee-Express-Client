@@ -1,5 +1,3 @@
-// in "src/components/CheckoutForm.jsx"
-
 import React, { useEffect, useState } from "react";
 import {
   PaymentElement,
@@ -7,6 +5,7 @@ import {
   useStripe,
   useElements
 } from "@stripe/react-stripe-js";
+import { Box, Button } from "@mui/material";
 
 function CheckoutForm() {
   const stripe = useStripe();
@@ -63,7 +62,7 @@ function CheckoutForm() {
       confirmParams: {
         // Make sure to change this to your payment completion page
         // !IMPORTANT. If using VITE, make sure you use the correct variable naming and usage (import.meta.env.VITE_VARIABLE_NAME)
-        return_url: `${process.env.REACT_APP_CLIENT_URL}`,
+        return_url: `${import.meta.env.VITE_CLIENT_URL}/payment-success`,
       },
     });
 
@@ -86,20 +85,22 @@ function CheckoutForm() {
   }
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
+    <Box sx={{backgroundColor:"lightgray", padding:"50px", margin:"100px", borderRadius:"5px"}}>
+      <form id="payment-form" onSubmit={handleSubmit}>
       {/* <LinkAuthenticationElement
         id="link-authentication-element"
         onChange={(e) => setEmail(e.target.value)}
       /> */}
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
+      <Button variant="contained" disabled={isLoading || !stripe || !elements} id="submit">
         <span id="button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
-      </button>
+      </Button>
       {/* Show any error or success messages */}
       {message && <div id="payment-message">{message}</div>}
     </form>
+    </Box>
   );
 }
 

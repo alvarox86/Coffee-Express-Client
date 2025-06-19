@@ -14,10 +14,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import PaymentIntent from "../../components/PaymentIntent/PaymentIntent";
 
 function CartPage() {
   const [cartData, setCartData] = useState([]);
   const { getUserData } = useContext(UserContext);
+  const [showPaymentIntent, setShowPaymentIntent] = useState(false)
+
 
   useEffect(() => {
     getData();
@@ -143,6 +146,13 @@ function CartPage() {
           )}
         </Box>
       </Paper>
+      <div>
+        { 
+          showPaymentIntent === false
+          ? <Button variant="contained"  onClick={() => setShowPaymentIntent(true)}>Purchase</Button> 
+          : <PaymentIntent productDetails={cartData}/> 
+        }
+      </div>
     </Box>
   );
 }
