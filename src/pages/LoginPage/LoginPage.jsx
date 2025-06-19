@@ -50,6 +50,7 @@ function LoginPage() {
         setErrorMessage(error.response.data.errorMessage)
       } else {
         // navigate a error
+        navigate("/")
       }
     }
 
