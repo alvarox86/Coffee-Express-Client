@@ -157,15 +157,14 @@ function MyNavBar({ setSearchProducts }) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" color="default" > 
+      <AppBar position="fixed" color="default">
         <Toolbar
           className="toolBar"
           sx={{
             minHeight: "70px",
             display: "flex",
             justifyContent: "space-between",
-            marginBottom: "15px"
-            
+            marginBottom: "15px",
           }}
         >
           <IconButton
@@ -173,7 +172,7 @@ function MyNavBar({ setSearchProducts }) {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ ml: 1  }}
+            sx={{ ml: 1 }}
           >
             <MenuIcon onClick={toggleDrawer(true)} />
             <Drawer open={open} onClose={toggleDrawer(false)}>
@@ -181,7 +180,9 @@ function MyNavBar({ setSearchProducts }) {
             </Drawer>
           </IconButton>
 
-          <Box sx={{ display: "flex", alignItems: "flex-end", flexGrow: 1, ml: 4}}>
+          <Box
+            sx={{ display: "flex", alignItems: "flex-end", flexGrow: 1, ml: 4 }}
+          >
             <img
               src={cafeicon}
               alt="LogoPagina"
@@ -244,42 +245,74 @@ function MyNavBar({ setSearchProducts }) {
             <IconButton aria-label="cart" sx={{ mr: 3 }}>
               <Badge badgeContent={userCart} color="error">
                 <Link to="/cart">
-                  <ShoppingCartIcon
-                    sx={{color: "grey", fontSize: "30px" }}
-                  />
+                  <ShoppingCartIcon sx={{ color: "grey", fontSize: "30px" }} />
                 </Link>
               </Badge>
             </IconButton>
           }
 
           {/* Auth */}
-          
-            {isLoggedIn === true ? (
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Box className="loggedCard" key={loggedUserId}>
-                  <Button onClick={handleClick}>
-                    <img src={userImgUrl} alt="User" style={{ width: "36px", borderRadius: "50%" }}/>
-                    <Typography variant="body1" sx={{textDecoration:"none", color:"black", paddingLeft:"10px"}}>{userName}</Typography>
-                  </Button>
-                  <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={openMenu}
-                    onClose={handleClose}
-                    slotProps={{
-                      list: {
-                        'aria-labelledby': 'basic-button',
-                      },
+
+          {isLoggedIn === true ? (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                flexDirection: { xs: "column", sm: "row" },
+              }}
+            >
+              <Box className="loggedCard" key={loggedUserId}>
+                <Button
+                  onClick={handleClick}
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    alignItems: "center",
+                  }}
+                >
+                  <img
+                    src={userImgUrl}
+                    alt="User"
+                    style={{ width: "36px", borderRadius: "50%" }}
+                    sx={{
+                      width: { xs: "40px", sm: "46px" },
+                    }}
+                  />
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      textDecoration: "none",
+                      color: "black",
+                      paddingLeft: "10px",
+                      display: { xs: "none", sm: "block" },
                     }}
                   >
-                    <Link to={`/userprofile/${loggedUserId}`} style={{ textDecoration: "none", color: "black" }}>
-                      <MenuItem>Profile</MenuItem>
-                    </Link>
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                  </Menu>        
-                </Box>
+                    {userName}
+                  </Typography>
+                </Button>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={openMenu}
+                  onClose={handleClose}
+                  slotProps={{
+                    list: {
+                      "aria-labelledby": "basic-button",
+                    },
+                  }}
+                >
+                  <Link
+                    to={`/userprofile/${loggedUserId}`}
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <MenuItem>Profile</MenuItem>
+                  </Link>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
               </Box>
-            ) : (
+            </Box>
+          ) : (
             <>
               <Link
                 to={"/signup"}

@@ -1,6 +1,7 @@
 import "./MyFooter.css"
 import mastercardIcon from "../../assets/images/mastercard.png"
 import visaIcon from "../../assets/images/visa.png"
+import { Link } from "react-router-dom"
 
 function MyFooter() {
   return (
@@ -9,8 +10,8 @@ function MyFooter() {
                 <div className="footerSection links">
                     <h4>Quick links</h4>
                     <ul>
-                        <li>Home</li>
-                        <li>Products</li>
+                        <li><Link to="/" style={{textDecoration:"none", color: "black"}}>Home</Link></li>
+                        <li><Link to="/products" style={{textDecoration:"none", color: "black"}}>Products</Link></li>
                     </ul>
                 </div>
                 <div className="footerSection contact">

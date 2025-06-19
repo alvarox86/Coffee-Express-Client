@@ -1,3 +1,18 @@
+html, body, #root {
+    height: 100%;
+    margin: 0;
+}
+
+.app-container{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.mainContent {
+    flex: 1;
+}
+
 .footer {
     background-color: #F2e8df;
     align-content: baseline;

@@ -23,30 +23,31 @@ function App() {
    const [searchProducts, setSearchProducts] = useState("");
 
   return (
-    <>
+    <div className='app-container'>
       <MyNavbar products={products} setProducts={setProducts} setSearchProducts={setSearchProducts}/>
 
-      <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/signup' element={<SignupPage/>} />
-        <Route path='/login' element={<LoginPage/>} />
-        <Route path='/userprofile/:userId' element={<UserProfilePage/>} />
-        <Route path='/editprofile/:userId' element={<EditProfilePage/>} /> 
-        <Route path="/products" element={<ProductsPage products={products} setProducts={setProducts} searchProducts={searchProducts}/>}/>
-        <Route path='/products/:productId' element={<ProductDetailsPage products={products} setProducts={setProducts}/>}/>
-        <Route path='/create-product' element={<CreateProduct/>}/>
-        <Route path='/products/:productId/modify' element={<ModifyProductPage/>}/>
-        <Route path='/cart' element={<CartPage/>}/>
-        <Route path='/aboutus' element={<AboutPage/>}/>
+      <main>
+        <Routes>
+         <Route path='/' element={<HomePage />} />
+         <Route path='/signup' element={<SignupPage/>} />
+         <Route path='/login' element={<LoginPage/>} />
+         <Route path='/userprofile/:userId' element={<UserProfilePage/>} />
+         <Route path='/editprofile/:userId' element={<EditProfilePage/>} /> 
+         <Route path="/products" element={<ProductsPage products={products} setProducts={setProducts} searchProducts={searchProducts}/>}/>
+         <Route path='/products/:productId' element={<ProductDetailsPage products={products} setProducts={setProducts}/>}/>
+         <Route path='/create-product' element={<CreateProduct/>}/>
+         <Route path='/products/:productId/modify' element={<ModifyProductPage/>}/>
+         <Route path='/cart' element={<CartPage/>}/>
+         <Route path='/aboutus' element={<AboutPage/>}/>
 
         {/*ERROR ROUTES */}
         <Route path='*' element={<NotFoundPage/>} />
         <Route path="/error" element={<ServerErrorPage/>}/>
         <Route path="/under-construction" element={<UnderConstruction/>}/>
       </Routes>
-
+      </main>
       <MyFooter/>
-    </>
+    </div>
   )
 }
 
