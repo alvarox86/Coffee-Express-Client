@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { UserContext } from "../../context/profile.context";
-import "./MyNavBar.css";
+import "./MyNavbar.css";
 import cafeicon from "../../assets/images/iconlogo_bsqf1c.png";
 
 import AppBar from "@mui/material/AppBar";
