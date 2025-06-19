@@ -8,19 +8,28 @@ import {
   Box,
   Button,
   Divider,
-  List,
   ListItem,
   Paper,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PaymentIntent from "../../components/PaymentIntent/PaymentIntent";
+import { AuthContext } from "../../context/auth.context";
 
 function CartPage() {
   const [cartData, setCartData] = useState([]);
   const { getUserData } = useContext(UserContext);
-  const [showPaymentIntent, setShowPaymentIntent] = useState(false)
+  const [showPaymentIntent, setShowPaymentIntent] = useState(false);
+  const { loggedUserId } = useContext(AuthContext);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loggedUserId) {
+      navigate("/signup");
+      return;
+    }
+  }, []);
 
   useEffect(() => {
     getData();
@@ -31,7 +40,9 @@ function CartPage() {
 
     try {
       if (storedToken) {
-        const response = await service.get(`/user/cart`, {headers: { Authorization: `Bearer ${storedToken}` }});
+        const response = await service.get(`/user/cart`, {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        });
         setCartData(response.data);
       }
     } catch (error) {
@@ -53,24 +64,28 @@ function CartPage() {
     <Box
       sx={{
         backgroundColor: "#261420",
-        p: 4,
+        p: { xs: 2, sm: 3, md: 4 },
         minHeight: "100vh",
         display: "flex",
-        justifyContent: "center", //Cambiar esto para meter al lado lo de los pagos
+        flexDirection: { xs: "column", md: "row" },
+        justifyContent: "center",
         alignItems: "flex-start",
+        gap: { xs: 2, md: 4 },
       }}
     >
       <Paper
         elevation={4}
         sx={{
-          backgroundColor: "#F2E8DF",
+          backgroundColor: "#fff9f8",
+          width: { xs: "90%", sm: "80%", md: "60%" },
+          p: { xs: 2, md: 3 },
           maxWidth: 600,
-          p: 3,
           borderRadius: 2,
-          width: "100%",
-          height: "70vh",
+          height: "auto",
           display: "flex",
           flexDirection: "column",
+          overflowY: "auto",
+          maxHeight: { xs: 300, md: 500 },
         }}
       >
         <Typography
@@ -100,7 +115,7 @@ function CartPage() {
                 textAlign: "center",
               }}
             >
-              <Typography variant="h6" >Your cart is empty</Typography>
+              <Typography variant="h6">Your cart is empty</Typography>
               <Button
                 variant="outlined"
                 component={Link}
@@ -144,13 +159,56 @@ function CartPage() {
           )}
         </Box>
       </Paper>
-      <div>
-        { 
-          showPaymentIntent === false
-          ? <Button variant="contained"  onClick={() => setShowPaymentIntent(true)}>Purchase</Button> 
-          : <PaymentIntent productDetails={cartData}/> 
-        }
-      </div>
+      <Paper
+        elevation={4}
+        sx={{
+          backgroundColor: "#fff9f8",
+          maxWidth: 600,
+          p: 3,
+          borderRadius: 2,
+          width: "100%",
+          height: "fit-content",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          margin: "0",
+          padding: "0",
+        }}
+      >
+        {/* Mensaje de aviso */}
+        <Box
+          sx={{
+            backgroundColor: "#ffefef",
+            border: "1px solid #d9534f",
+            color: "#a94442",
+            borderRadius: 1,
+            p: 2,
+            fontSize: "0.9rem",
+            textAlign: "center",
+            fontWeight: "medium",
+          }}
+        >
+          <strong>Notice:</strong> This is a practice application and a test
+          payment environment. Please do not enter real payment information, as
+          this is not a secure or live payment system.
+        </Box>
+        {showPaymentIntent === false ? (
+          <Button
+            variant="contained"
+            onClick={() => setShowPaymentIntent(true)}
+            sx={{
+              backgroundColor: "#8C5042",
+              color: "#fff",
+              fontWeight: "bold",
+              ":hover": { backgroundColor: "#592C28" },
+            }}
+          >
+            Purchase
+          </Button>
+        ) : (
+          <PaymentIntent productDetails={cartData} />
+        )}
+      </Paper>
     </Box>
   );
 }

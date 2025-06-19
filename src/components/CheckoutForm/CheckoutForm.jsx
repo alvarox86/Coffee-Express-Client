@@ -3,20 +3,19 @@ import {
   PaymentElement,
   LinkAuthenticationElement,
   useStripe,
-  useElements
+  useElements,
 } from "@stripe/react-stripe-js";
 import { Box, Button } from "@mui/material";
 import service from "../../services/service.config";
 import { UserContext } from "../../context/profile.context";
 
 function CheckoutForm() {
-  
   const stripe = useStripe();
   const elements = useElements();
 
-    const { getUserData } = useContext(UserContext);
+  const { getUserData } = useContext(UserContext);
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -79,35 +78,75 @@ function CheckoutForm() {
   };
 
   const paymentElementOptions = {
-    layout: "tabs"
-  }
+    layout: "tabs",
+  };
 
-  const handleSubmitPayNow = async () =>{
-    const storedToken = localStorage.getItem("authToken")
+  const handleSubmitPayNow = async () => {
+    const storedToken = localStorage.getItem("authToken");
     try {
-      await service.patch("/user/cart/cleancart", {headers: { Authorization: `Bearer ${storedToken}` }})
-      getUserData()
+      await service.patch("/user/cart/cleancart", {
+        headers: { Authorization: `Bearer ${storedToken}` },
+      });
+      getUserData();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   return (
-    <Box sx={{backgroundColor:"lightgray", padding:"50px", margin:"100px", borderRadius:"5px"}}>
+    <Box
+      sx={{
+        backgroundColor: "lightgray",
+        padding: { xs: 3, md: 6 },
+        margin: { xs: 2, md: 10 },
+        borderRadius: 2,
+        maxWidth: 600,
+        mx: "auto",
+        boxShadow: 3,
+      }}
+    >
       <form id="payment-form" onSubmit={handleSubmit}>
-      {/* <LinkAuthenticationElement
+        {/* <LinkAuthenticationElement
         id="link-authentication-element"
         onChange={(e) => setEmail(e.target.value)}
       /> */}
-      <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <Button type="submit" variant="contained" disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text" onClick={handleSubmitPayNow}>
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-        </span>
-      </Button>
-      {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
-    </form>
+        <PaymentElement id="payment-element" options={paymentElementOptions} />
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={isLoading || !stripe || !elements}
+          id="submit"
+          sx={{
+            mt: 4,
+
+            backgroundColor: "#8C5042",
+            fontWeight: "bold",
+            ":hover": { backgroundColor: "#592C28" },
+          }}
+        >
+          <span id="button-text" onClick={handleSubmitPayNow}>
+            {isLoading ? (
+              <div className="spinner" id="spinner"></div>
+            ) : (
+              "Pay now"
+            )}
+          </span>
+        </Button>
+        {/* Show any error or success messages */}
+        {message && (
+          <Box
+            id="payment-message"
+            sx={{
+              mt: 2,
+              color: "error.main",
+              fontWeight: "medium",
+              textAlign: "center",
+            }}
+          >
+            {message}
+          </Box>
+        )}
+      </form>
     </Box>
   );
 }

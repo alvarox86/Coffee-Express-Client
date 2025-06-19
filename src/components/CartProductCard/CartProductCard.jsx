@@ -1,8 +1,12 @@
 import { Box, Button, Typography } from "@mui/material";
 import "./CartProductCard.css";
+import { Link } from "react-router-dom";
 
 function CartProductCard({ eachCardData, handleDeleteCartProduct }) {
-  return (
+ 
+
+ 
+ return (
     <Box
       key={eachCardData._id}
       sx={{
@@ -18,6 +22,7 @@ function CartProductCard({ eachCardData, handleDeleteCartProduct }) {
         flexWrap: "wrap",
       }}
     >
+      <Link to={`/products/${eachCardData._id}`}>
       <Box sx={{ width: 80, height: 80, flexShrink: 0 }}>
         <img
           src={eachCardData.imageUrl}
@@ -31,8 +36,9 @@ function CartProductCard({ eachCardData, handleDeleteCartProduct }) {
           }}
         />
       </Box>
+      </Link>
 
-      <Box sx={{ flex: 1, minWidth: 200 }}>
+      <Box sx={{ flex: 1, minWidth: 300 }}>
         <Typography
           variant="subtitle1"
           fontWeight="bold"
