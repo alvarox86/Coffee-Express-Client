@@ -27,14 +27,6 @@ function AuthWrapper(props) {
       setRol(response.data.payload.rol);
       setIsValidatingToken(false);
     } catch (error) {
-      const status = error.response.status;
-      if(status === 401) {
-        console.log("Authentication failed: invalid or expired token.")
-      }else if( status === 403) {
-        console.log("Access denied: you do not have permission to view this page.");
-      }else {
-        console.log("Error verifying token:", error.message);
-      }
       console.log(error)
 
       // si la llamada llega a este punto significa que el token no existe, no es valido o expiró

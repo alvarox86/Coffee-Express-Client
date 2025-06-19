@@ -252,41 +252,33 @@ function MyNavBar({ setSearchProducts }) {
           }
 
           {/* Auth */}
-
-          {isLoggedIn === true ? (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Box className="loggedCard" key={loggedUserId}>
-                <Button onClick={handleClick}>
-                  <img
-                    src={userImgUrl}
-                    alt="User"
-                    style={{ width: "36px", borderRadius: "50%" }}
-                  />
-                  <Typography
-                    variant="body1"
-                    sx={{ textDecoration: "none", color: "black" }}
+          
+            {isLoggedIn === true ? (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Box className="loggedCard" key={loggedUserId}>
+                  <Button onClick={handleClick}>
+                    <img src={userImgUrl} alt="User" style={{ width: "36px", borderRadius: "50%" }}/>
+                    <Typography variant="body1" sx={{textDecoration:"none", color:"black", paddingLeft:"10px"}}>{userName}</Typography>
+                  </Button>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={openMenu}
+                    onClose={handleClose}
+                    slotProps={{
+                      list: {
+                        'aria-labelledby': 'basic-button',
+                      },
+                    }}
                   >
-                    {userName}
-                  </Typography>
-                </Button>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={openMenu}
-                  onClose={handleClose}
-                  slotProps={{
-                    list: {
-                      "aria-labelledby": "basic-button",
-                    },
-                  }}
-                >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
-                  <MenuItem onClick={handleClose}>Logout</MenuItem>
-                </Menu>
+                    <Link to={`/userprofile/${loggedUserId}`} style={{ textDecoration: "none", color: "black" }}>
+                      <MenuItem>Profile</MenuItem>
+                    </Link>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  </Menu>        
+                </Box>
               </Box>
-            </Box>
-          ) : (
+            ) : (
             <>
               <Link
                 to={"/signup"}
