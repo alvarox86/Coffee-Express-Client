@@ -7,8 +7,8 @@ function NotFoundPage() {
   return (
       <Box
       sx={{
-        minHeight: "100vh",
-        bgcolor: "#261420", // fondo oscuro
+        minHeight: "80vh",
+        bgcolor: "#261420",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

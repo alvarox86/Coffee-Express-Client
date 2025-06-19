@@ -48,12 +48,11 @@ function ModifyProductPage() {
           setType(response.data.type);
           setPrice(response.data.price);
           setStock(response.data.stock);
-          console.log(response.data);
         }
       } catch (error) {
         if (error.response.status) {
           alert("Access denied.");
-          navigate("/products"); 
+          navigate("/products");
         } else {
           console.log(error);
         }
@@ -85,8 +84,6 @@ function ModifyProductPage() {
       await service.put(`/product/${productId}`, updateProduct, {
         headers: { Authorization: `Bearer ${storedToken}` },
       });
-
-      console.log("producto EDITADO correctamente");
 
       navigate(`/products/${productId}`);
     } catch (error) {
@@ -147,6 +144,7 @@ function ModifyProductPage() {
         borderRadius: 4,
         boxShadow: 3,
         backgroundColor: "#fff",
+        marginBottom: "30px",
       }}
     >
       <Typography variant="h5" fontWeight="bold" gutterBottom>
@@ -236,22 +234,39 @@ function ModifyProductPage() {
           fullWidth
           required
         />
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          sx={{ alignSelf: "flex-end" }}
+        <Box
+          sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}
         >
-          Update Product
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleDeleteProduct}
-          sx={{ alignSelf: "flex-end" }}
-        >
-          Delete Product
-        </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            sx={{
+              alignSelf: "flex-end",
+              alignSelf: "flex-end",
+              backgroundColor: "#D9A689",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#6c3a2f",
+              },
+            }}
+          >
+            Update
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDeleteProduct}
+            sx={{
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#6c3a2f",
+              },
+            }}
+          >
+            Delete
+          </Button>
+        </Box>
       </Stack>
     </Box>
   );

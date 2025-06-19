@@ -15,6 +15,8 @@ import CartPage from './pages/CartPage/CartPage'
 import CreateProduct from './pages/CreateProduct/CreateProduct'
 import ModifyProductPage from './pages/ModifyProductPage/ModifyProductPage'
 import AboutPage from './pages/AboutPage/AboutPage'
+import ServerErrorPage from './pages/ErrorsPages/ServerErrorPage'
+import UnderConstruction from './pages/ErrorsPages/UnderConstruction'
 
 function App() {
    const [products, setProducts] = useState([]);
@@ -36,7 +38,11 @@ function App() {
         <Route path='/products/:productId/modify' element={<ModifyProductPage/>}/>
         <Route path='/cart' element={<CartPage/>}/>
         <Route path='/aboutus' element={<AboutPage/>}/>
+
+        {/*ERROR ROUTES */}
         <Route path='*' element={<NotFoundPage/>} />
+        <Route path="/error" element={<ServerErrorPage/>}/>
+        <Route path="/under-construction" element={<UnderConstruction/>}/>
       </Routes>
 
       <MyFooter/>

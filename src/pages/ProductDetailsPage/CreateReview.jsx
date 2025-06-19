@@ -1,86 +1,103 @@
-import  { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../context/auth.context";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Rating,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import service from "../../services/service.config";
 
-function CreateReview({fetchReviews}) {
+function CreateReview({ fetchReviews }) {
   const { productId } = useParams();
   const { loggedUserId, isLoggedIn } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
-  const [rating, setRating] = useState("");
+  const [rating, setRating] = useState(null);
   const [comment, setComment] = useState("");
 
   const handleReviewSubmit = async (event) => {
     event.preventDefault();
 
     if (!isLoggedIn) {
-        navigate("/signup")
-        return;
+      navigate("/signup");
+      return;
     }
 
+    if (!rating || rating < 1 || rating > 5) {
+      alert("Please provide a rating between 1 and 5 stars.");
+      return;
+    }
     console.log("Enviando formulario");
 
     const newReview = {
       username: loggedUserId,
       product: productId,
-      rating,
+      rating: rating,
       comment,
     };
 
     const storedToken = localStorage.getItem("authToken");
     try {
       if (storedToken) {
-        await service.post(`/review`,newReview,
-          {
-            headers: {
-              Authorization: `Bearer ${storedToken} `,
-            },
-          }
-        );
+        await service.post(`/review`, newReview, {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        });
 
         fetchReviews();
 
         /*Clean form */
-        setRating("");
+        setRating(null);
         setComment("");
+        console.log("reseña añadida correctamente");
       }
-      console.log("reseña añadida correctamente");
+
     } catch (error) {
       console.log(error);
     }
   };
-
-
 
   return (
     <Box
       component="form"
       onSubmit={handleReviewSubmit}
       sx={{
-        maxWidth: 600,
-        margin: "0 auto",
+        maxWidth: 1200,
+        margin: "auto",
         padding: 4,
         borderRadius: 4,
         boxShadow: 3,
-        backgroundColor: "#fff",
+        bgcolor: "background.paper",
       }}
     >
-      <Typography variant="h5" fontWeight="bold" gutterBottom>
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        gutterBottom
+        sx={{ mb: 3, color: "#8B5042" }}
+      >
         Submit your review
       </Typography>
 
       <Stack spacing={3}>
-        <TextField
-          name="rating"
-          label="rating"
-          value={rating}
-          onChange={(e) => setRating(e.target.value)}
-          fullWidth
-          required
-        />
+        <Stack spacing={1} direction="row" alignItems="center">
+          <Typography component="legend" sx={{color: "#592c28"}}>Rating:</Typography>
+          <Rating
+            name="rating"
+            value={rating}
+            precision={1}
+            onChange={(event, newValue) => {
+              setRating(newValue);
+            }}
+            size="large"
+          />
+        </Stack>
 
         <TextField
           name="comment"
@@ -89,15 +106,20 @@ function CreateReview({fetchReviews}) {
           onChange={(e) => setComment(e.target.value)}
           fullWidth
           multiline
-          rows={3}
+          rows={2}
           required
         />
-       
+
         <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          sx={{ alignSelf: "flex-end" }}
+           sx={{
+        alignSelf: "flex-end",
+        backgroundColor: "#8B5042",
+        color: "white",
+        "&:hover": {
+          backgroundColor: "#6c3a2f",
+        },
+      }}
+      type="submit"
         >
           Add Review
         </Button>

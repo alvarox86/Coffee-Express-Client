@@ -3,6 +3,7 @@ import { AuthContext } from "../../context/auth.context";
 import { useNavigate } from "react-router-dom";
 import service from "../../services/service.config";
 import { UserContext } from "../../context/profile.context";
+import { Alert, Box, Button, Stack, TextField, Typography } from "@mui/material";
 
 function LoginPage() {
 
@@ -57,38 +58,60 @@ function LoginPage() {
   };
 
   return (
-    <div>
+    <Box maxWidth={400}
+      mx="auto"
+      mt={8}
+      p={4}
+      boxShadow={3}
+      borderRadius={2}
+      bgcolor="white"
+      sx={{marginBottom: "20px"}}>
 
-      <h1>Formulario de Acceso</h1>
+      <Typography variant="h5" fontWeight="bold" gutterBottom align="center" sx={{ color: "#8c5042" }}> Log in to your Account</Typography>
 
       <form onSubmit={handleLogin}>
-        <label>Correo Electronico:</label>
-        <input
-          type="email"
-          name="email"
-          value={email}
-          onChange={handleEmailChange}
-        />
+        <Stack spacing={3}>
+         <TextField
+            label="Email Address"
+            type="email"
+            name="email"
+            value={email}
+            onChange={handleEmailChange}
+            fullWidth
+            required
+          />
 
-        <br />
+        <TextField
+            label="Password"
+            type="password"
+            name="password"
+            value={password}
+            onChange={handlePasswordChange}
+            fullWidth
+            required
+          />
 
-        <label>Contraseña:</label>
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
+        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
-        <br />
+        <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{
+              backgroundColor: "#8c5042",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#c18e73",
+              },
+            }}
+          >
+            Log In
+          </Button>
 
-        <button type="submit">Acceder</button>
-
-        {errorMessage && <p>{errorMessage}</p>}
-
+      </Stack>
       </form>
-      
-    </div>
+
+    </Box>
   );
 }
 

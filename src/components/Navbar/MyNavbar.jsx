@@ -164,6 +164,7 @@ function MyNavBar({ setSearchProducts }) {
             minHeight: "70px",
             display: "flex",
             justifyContent: "space-between",
+            marginBottom: "15px"
             
           }}
         >
@@ -184,7 +185,7 @@ function MyNavBar({ setSearchProducts }) {
             <img
               src={cafeicon}
               alt="LogoPagina"
-              style={{ width: "50px", marginRight: "15px" }}
+              style={{ width: "45px", marginRight: "15px" }}
               className="imgIcon"
             />
             <Typography
@@ -244,7 +245,7 @@ function MyNavBar({ setSearchProducts }) {
               <Badge badgeContent={userCart} color="error">
                 <Link to="/cart">
                   <ShoppingCartIcon
-                    sx={{color: "grey" }}
+                    sx={{color: "grey", fontSize: "30px" }}
                   />
                 </Link>
               </Badge>
