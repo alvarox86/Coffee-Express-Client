@@ -31,9 +31,7 @@ function CartPage() {
 
     try {
       if (storedToken) {
-        const response = await service.get(`/user/cart`, {
-          headers: { Authorization: `Bearer ${storedToken}` },
-        });
+        const response = await service.get(`/user/cart`, {headers: { Authorization: `Bearer ${storedToken}` }});
         setCartData(response.data);
       }
     } catch (error) {
