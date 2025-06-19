@@ -39,7 +39,6 @@ function ModifyProductPage() {
           const response = await service.get(`/product/${productId}/modify`, {
             headers: { Authorization: `Bearer ${storedToken}` },
           });
-          console.log(response.data.name);
           setName(response.data.name);
           setDescription(response.data.description);
           setImageUrl(response.data.imageUrl);
@@ -242,7 +241,6 @@ function ModifyProductPage() {
             color="primary"
             type="submit"
             sx={{
-              alignSelf: "flex-end",
               alignSelf: "flex-end",
               backgroundColor: "#D9A689",
               color: "white",

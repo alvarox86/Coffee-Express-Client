@@ -1,16 +1,20 @@
-// in "src/components/CheckoutForm.jsx"
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   PaymentElement,
   LinkAuthenticationElement,
   useStripe,
   useElements
 } from "@stripe/react-stripe-js";
+import { Box, Button } from "@mui/material";
+import service from "../../services/service.config";
+import { UserContext } from "../../context/profile.context";
 
 function CheckoutForm() {
+  
   const stripe = useStripe();
   const elements = useElements();
+
+    const { getUserData } = useContext(UserContext);
 
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState(null);
@@ -63,7 +67,7 @@ function CheckoutForm() {
       confirmParams: {
         // Make sure to change this to your payment completion page
         // !IMPORTANT. If using VITE, make sure you use the correct variable naming and usage (import.meta.env.VITE_VARIABLE_NAME)
-        return_url: `${process.env.REACT_APP_CLIENT_URL}`,
+        return_url: `${import.meta.env.VITE_CLIENT_URL}/payment-success`,
       },
     });
 
@@ -85,21 +89,33 @@ function CheckoutForm() {
     layout: "tabs"
   }
 
+  const handleSubmitPayNow = async () =>{
+    const storedToken = localStorage.getItem("authToken")
+    try {
+      await service.patch("/user/cart/cleancart", {headers: { Authorization: `Bearer ${storedToken}` }})
+      getUserData()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
+    <Box sx={{backgroundColor:"lightgray", padding:"50px", margin:"100px", borderRadius:"5px"}}>
+      <form id="payment-form" onSubmit={handleSubmit}>
       {/* <LinkAuthenticationElement
         id="link-authentication-element"
         onChange={(e) => setEmail(e.target.value)}
       /> */}
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
+      <Button type="submit" variant="contained" disabled={isLoading || !stripe || !elements} id="submit">
+        <span id="button-text" onClick={handleSubmitPayNow}>
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
-      </button>
+      </Button>
       {/* Show any error or success messages */}
       {message && <div id="payment-message">{message}</div>}
     </form>
+    </Box>
   );
 }
 

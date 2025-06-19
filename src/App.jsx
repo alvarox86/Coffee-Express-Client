@@ -17,6 +17,7 @@ import ModifyProductPage from './pages/ModifyProductPage/ModifyProductPage'
 import AboutPage from './pages/AboutPage/AboutPage'
 import ServerErrorPage from './pages/ErrorsPages/ServerErrorPage'
 import UnderConstruction from './pages/ErrorsPages/UnderConstruction'
+import PaymentSuccess from './components/PaymentSuccess/PaymentSuccess'
 
 function App() {
    const [products, setProducts] = useState([]);
@@ -39,6 +40,7 @@ function App() {
          <Route path='/products/:productId/modify' element={<ModifyProductPage/>}/>
          <Route path='/cart' element={<CartPage/>}/>
          <Route path='/aboutus' element={<AboutPage/>}/>
+          <Route path="/payment-success" element={ <PaymentSuccess/> }/>
 
         {/*ERROR ROUTES */}
         <Route path='*' element={<NotFoundPage/>} />

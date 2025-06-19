@@ -150,7 +150,7 @@ function ProductDetailsPage() {
               {product.description}
             </Typography>
             <Typography variant="subtitle1" fontWeight="medium" sx={{ mt: 2 }}>
-              Precio: ${product.price}
+              Price: {product.price}€
             </Typography>
             <Typography
               variant="subtitle2"
@@ -177,21 +177,36 @@ function ProductDetailsPage() {
 
           {/* Actions */}
           <Box sx={{ mt: 4, display: "flex", gap: 2, flexWrap: "wrap" }}>
+            {product.stock <= 0 ? (
             <Button
-              variant="outlined"
-              size="large"
-              sx={{
-                backgroundColor: "#8B5042",
-                color: "white",
-                mt: 3,
-                "&:hover": {
-                  backgroundColor: "#6c3a2f",
-                },
-              }}
-              onClick={handleAddCart}
-            >
-              Add to Cart
-            </Button>
+            disabled
+            variant="contained"
+            size="large"
+            sx={{
+              backgroundColor: "#8B5042",
+              color: "white",
+              mt: 3,
+              "&:hover": {
+                backgroundColor: "#6c3a2f",
+              },
+            }}
+            onClick={handleAddCart}
+          >Out of stock</Button>
+          ) : (<Button
+            variant="contained"
+            size="large"
+            sx={{
+              backgroundColor: "#8B5042",
+              color: "white",
+              mt: 3,
+              "&:hover": {
+                backgroundColor: "#6c3a2f",
+              },
+            }}
+            onClick={handleAddCart}
+          >
+            Add Cart
+          </Button>)}
 
             {rol === "vendor" && (
               <Link to={`/products/${productId}/modify`}>

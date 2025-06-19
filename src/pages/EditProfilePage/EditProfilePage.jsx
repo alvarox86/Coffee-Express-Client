@@ -179,7 +179,6 @@ function EditProfilePage() {
           type="submit"
           sx={{
             alignSelf: "flex-end",
-            alignSelf: "flex-end",
             backgroundColor: "#D9A689",
             color: "white",
             "&:hover": {
@@ -199,7 +198,6 @@ function EditProfilePage() {
             color="primary"
             type="submit"
             sx={{
-              alignSelf: "flex-end",
               alignSelf: "flex-end",
               backgroundColor: "#D9A689",
               color: "white",

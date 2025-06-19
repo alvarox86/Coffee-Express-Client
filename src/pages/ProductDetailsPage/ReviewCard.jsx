@@ -9,7 +9,6 @@ function ReviewCard({ review, loggedUserId, handleDeleteReview }) {
       sx={{
         border: "1px solid #ddd",
         borderRadius: 2,
-        p: 2,
         mb: 3,
         p: { xs: 2, md: 2 },
         backgroundColor: "#fafafa",
