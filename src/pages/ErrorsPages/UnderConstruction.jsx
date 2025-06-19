@@ -1,0 +1,57 @@
+import { Box, Button, Typography } from '@mui/material';
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import ConstructionIcon from '@mui/icons-material/Construction';
+
+function UnderConstruction() {
+    const navigate = useNavigate();
+
+  return (
+    <Box
+      sx={{
+        minHeight: "80vh",
+        bgcolor: "#261420",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        px: 2,
+      }}
+    >
+      <ConstructionIcon sx={{ fontSize: 80, color: "#ff9d23", mb: 2 }} />
+      <Typography
+        variant="h3"
+        sx={{ fontWeight: 700, color: "#fef9e1", mb: 1 }}
+      >
+        Under Construction
+      </Typography>
+      <Typography variant="h6" sx={{ color: "#e5d0ac", mb: 2 }}>
+        This page is currently being built
+      </Typography>
+      <Typography sx={{ color: "#e5d0ac", mb: 4, maxWidth: 400 }}>
+        We're working hard to bring you this content soon. Please check back
+        later or return to the homepage.
+      </Typography>
+      <Button
+        variant="contained"
+        onClick={() => navigate("/")}
+        sx={{
+          bgcolor: "#ff9d23",
+          color: "#261420",
+          fontWeight: 600,
+          px: 4,
+          py: 1.5,
+          borderRadius: "12px",
+          "&:hover": {
+            bgcolor: "#c14600",
+          },
+        }}
+      >
+        Go back to Home
+      </Button>
+    </Box>
+  )
+}
+
+export default UnderConstruction

@@ -1,125 +1,217 @@
 import { useEffect, useState, useContext } from "react";
-import axios from "axios";
 import { AuthContext } from "../../context/auth.context";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate, Link } from "react-router-dom";
+import service from "../../services/service.config";
+import { UserContext } from "../../context/profile.context";
+import { Box, Button, TextField, Typography } from "@mui/material";
 
 function EditProfilePage() {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const { loggedUserId } = useContext(AuthContext);
+  const { loggedUserId } = useContext(AuthContext);
+  const { getUserData } = useContext(UserContext);
+  const [isUploading, setIsUploading] = useState(false);
 
-    const [isUploading, setIsUploading] = useState(false);
-    
-    const [usernameInputValue, setUsernameInputValue] = useState("")
-    const [phoneInputValue,setPhoneInputValue] = useState("")
-    const [adressInputValue, setAdressInputValue] = useState("")
-    const [imageUrl, setImageUrl] = useState(null); 
+  const [usernameInputValue, setUsernameInputValue] = useState("");
+  const [phoneInputValue, setPhoneInputValue] = useState("");
+  const [adressInputValue, setAdressInputValue] = useState("");
+  const [imageUrl, setImageUrl] = useState(null);
 
-    const handleUsernameChange = (event) => {
-        setUsernameInputValue(event.target.value)
+  const handleUsernameChange = (event) => {
+    setUsernameInputValue(event.target.value);
+  };
+  const handlePhoneChange = (event) => {
+    setPhoneInputValue(event.target.value);
+  };
+  const handleAdressChange = (event) => {
+    setAdressInputValue(event.target.value);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    const storedToken = localStorage.getItem("authToken");
+
+    try {
+      if (storedToken) {
+        const response = await service.get(`/user`, {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        });
+        setUsernameInputValue(response.data.username);
+        setPhoneInputValue(response.data.phone);
+        setAdressInputValue(response.data.adress);
+        setImageUrl(response.data.profilepicture);
+      }
+    } catch (error) {
+      console.log(error);
     }
-    const handlePhoneChange = (event)=>{
-        setPhoneInputValue(event.target.value)
-    }
-    const handleAdressChange = (event) => {
-        setAdressInputValue(event.target.value)
-    }
+  };
 
-    useEffect(()=>{
-        getData()
-    },[])
-
-    const getData = async () =>{
-        const storedToken = localStorage.getItem("authToken");
-
-        try {
-            if(storedToken){
-                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/user`,{ headers: { Authorization: `Bearer ${storedToken}` } });
-                setUsernameInputValue(response.data.username)
-                setPhoneInputValue(response.data.phone)
-                setAdressInputValue(response.data.adress)
-                setImageUrl(response.data.profilepicture)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    /* if(userUserName === null || userPhone === null || userProfilePicture === null || userAdress === null){
+  /* if(userUserName === null || userPhone === null || userProfilePicture === null || userAdress === null){
         <CircularProgress />
     } */
 
-    const handleSubmitForm = async (e) =>{
-        e.preventDefault()
-        const storedToken = localStorage.getItem("authToken");
+  const handleSubmitForm = async (e) => {
+    e.preventDefault();
+    const storedToken = localStorage.getItem("authToken");
 
-        const updatedProfile = {
-            username: usernameInputValue,
-            phone: phoneInputValue,
-            adress: adressInputValue,
-            profilepicture: imageUrl
-        }
+    const updatedProfile = {
+      username: usernameInputValue,
+      phone: phoneInputValue,
+      adress: adressInputValue,
+      profilepicture: imageUrl,
+    };
 
-        try {
-            await axios.patch(`${import.meta.env.VITE_SERVER_URL}/api/user`, updatedProfile,{ headers: { Authorization: `Bearer ${storedToken}` } })
-            navigate(`/userprofile/${loggedUserId}`)
-            
-        } catch (error) {
-            console.log(error)
-        }   
+    try {
+      await service.patch(`/user`, updatedProfile, {
+        headers: { Authorization: `Bearer ${storedToken}` },
+      });
+      getUserData();
+      navigate(`/userprofile/${loggedUserId}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleFileUpload = async (event) => {
+    if (!event.target.files[0]) {
+      return;
     }
 
-    const handleFileUpload = async (event) =>{
+    setIsUploading(true);
 
-        if (!event.target.files[0]) {
-            return;
-        }
+    const uploadData = new FormData();
+    uploadData.append("image", event.target.files[0]);
 
-        setIsUploading(true)
+    try {
+      const response = await service.post(`/upload`, uploadData);
 
-        const uploadData = new FormData()
-        uploadData.append("image", event.target.files[0] )
-
-        try {
-            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/upload`, uploadData)
-
-            setImageUrl(response.data.imageUrl)
-            setIsUploading(false)
-
-        } catch (error) {
-            console.log(error)
-        }
+      setImageUrl(response.data.imageUrl);
+      setIsUploading(false);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
   return (
-    <div className="userProfileForm">
-        <form onSubmit={handleSubmitForm}>
-            <h3>Update data</h3>
-            
-            <label>Username</label>
-            <input type="text" required name="User name" onChange={handleUsernameChange} value={usernameInputValue}/>
+    <Box
+      component="form"
+      onSubmit={handleSubmitForm}
+      sx={{
+        maxWidth: 600,
+        mx: "auto",
+        mt: 4,
+        p: 3,
+        border: "1px solid #ddd",
+        borderRadius: 2,
+        boxShadow: 3,
+        bgcolor: "background.paper",
+        display: "flex",
+        flexDirection: "column",
+        gap: 3,
+        marginBottom: "40px"
+      }}
+    >
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        textAlign="center"
+        sx={{color: "#592c28"}}
+        gutterBottom
+      >
+        Update your Profile
+      </Typography>
 
-            <label>Phone</label>
-            <input type="text" required name="Phone" onChange={handlePhoneChange} value={phoneInputValue}/>
+      <TextField
+        label="Username"
+        name="username"
+        value={usernameInputValue}
+        onChange={handleUsernameChange}
+        fullWidth
+      />
 
-            <label>Adress</label>
-            <input type="text" required name="Adress" onChange={handleAdressChange} value={adressInputValue}/>
+      <TextField
+        label="Phone"
+        name="phone"
+        value={phoneInputValue}
+        onChange={handlePhoneChange}
+        fullWidth
+      />
 
-            <label>Image</label>
-            <input type="file" name="Image" onChange={handleFileUpload} disabled={isUploading}/>
-            {isUploading ? <h3>... uploading image</h3> : null}
-            {imageUrl ? (<div><img src={imageUrl} alt="img" width={200} /></div>) : null}
+      <TextField
+        label="Address"
+        name="address"
+        value={adressInputValue}
+        onChange={handleAdressChange}
+        fullWidth
+      />
 
-            <button type="submit">Edit profile</button>
-        </form>
-        <Link to={`/userprofile/${loggedUserId}`}>
-            <button>
-                Go back
-            </button>
+      <Box>
+        <Typography variant="body1" mb={1} sx={{ color: "black" }}>
+          Change your user profile picture:
+        </Typography>
+        <input
+          type="file"
+          name="image"
+          onChange={handleFileUpload}
+          disabled={isUploading}
+          style={{ marginBottom: "8px" }}
+        />
+        {isUploading && <Typography>... uploading image</Typography>}
+        {imageUrl && (
+          <Box mt={1}>
+            <img
+              src={imageUrl}
+              alt="profile"
+              width={200}
+              style={{ borderRadius: 4 }}
+            />
+          </Box>
+        )}
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          sx={{
+            alignSelf: "flex-end",
+            backgroundColor: "#D9A689",
+            color: "white",
+            "&:hover": {
+              backgroundColor: "#6c3a2f",
+            },
+          }}
+        >
+          Edit your profile
+        </Button>
+
+        <Link
+          to={`/userprofile/${loggedUserId}`}
+          style={{ textDecoration: "none" }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            sx={{
+              alignSelf: "flex-end",
+              backgroundColor: "#D9A689",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#6c3a2f",
+              },
+            }}
+          >
+            Go back
+          </Button>
         </Link>
-    </div>
-  )
+      </Box>
+    </Box>
+  );
 }
 
-export default EditProfilePage
+export default EditProfilePage;

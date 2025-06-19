@@ -8,25 +8,51 @@ import { Link } from "react-router-dom";
 
 function ProductCard({ product }) {
   return (
-    <Card sx={{ maxWidth: 345, backgroundColor: "#fff4e6", borderRadius: 3, boxShadow: 3, transition: "all 0.3s ease", "&:hover": { transform: "scale(1.03)", boxShadow: "10px 10px 20px rgba(0, 0, 0, 0.2)" } }}>
+    <Card
+      sx={{
+        maxWidth: 345,
+        backgroundColor: "white",
+        borderRadius: 1,
+        boxShadow: 3,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        transition: "all 0.3s ease",
+        "&:hover": {
+          transform: "scale(1.03)",
+          boxShadow: "10px 10px 20px rgba(0, 0, 0, 0.2)",
+        },
+      }}
+    >
       <CardMedia
         component="img"
         alt={product.name}
         height="200"
-        image={
-          product.imgUrl ||
-          "https://res.cloudinary.com/dotfm1go0/image/upload/v1749917582/default-image_600_u1nizl.webp"
-        }
+        src={product.imageUrl}
+        sx={{ objectFit: "cover" }}
       />
-      <CardContent>
-        <Typography gutterBottom variant="h6" fontWeight="bold" sx={{ color: "#592C27" }}>
+      <CardContent sx={{ flexGrow: 1 }}>
+        <Typography
+          gutterBottom
+          variant="h6"
+          fontWeight="bold"
+          sx={{ color: "#592C27", minHeight: "3em", textAlign: "center" }}
+        >
           {product.name}
         </Typography>
-        <Typography variant="body2" sx={{ color: "#8B5042" }}>
+        <Typography
+          variant="body1"
+          sx={{
+            color: "#261420",
+            border: "0.5px solid #261420",
+            padding: "4px 8px",
+            textAlign: "center",
+          }}
+        >
           {product.price} €
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions sx={{ justifyContent: "flex-end" }}>
         <Button
           component={Link}
           to={`/products/${product._id}`}

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
-import "./MyNavbar.css";
-import cafeicon from "../../assets/images/cafeicon.png";
-import axios from "axios";
+import { UserContext } from "../../context/profile.context";
+import "./MyNavBar.css";
+import cafeicon from "../../assets/images/iconlogo_bsqf1c.png";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -19,20 +19,26 @@ import ListItem from "@mui/material/ListItem";
 import HomeIcon from "@mui/icons-material/Home";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoIcon from "@mui/icons-material/Info";
-import Face2Icon from "@mui/icons-material/Face2";
-import { styled, alpha } from "@mui/material/styles";
+import FreeBreakfastIcon from "@mui/icons-material/FreeBreakfast";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Badge from '@mui/material/Badge';
-import { Button } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Badge from "@mui/material/Badge";
+import { Paper } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
-function MyNavBar({ products, setProducts }) {
+function MyNavBar({ setSearchProducts }) {
   const { isLoggedIn, loggedUserId, rol } = useContext(AuthContext);
+  const { userName, userImgUrl, userCart, setUserCart } =
+    useContext(UserContext);
 
   const navigate = useNavigate();
+  const [inputSearchValue, setInputSearchValue] = useState("");
 
   const { authenticateUser } = useContext(AuthContext);
 
@@ -48,7 +54,7 @@ function MyNavBar({ products, setProducts }) {
 
     try {
       await authenticateUser();
-
+      setUserCart(null);
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -57,83 +63,21 @@ function MyNavBar({ products, setProducts }) {
 
   //----------------Search Bar------------------
 
-  const handleInputChange = (event) => {
-    setProducts(event.target.value);
-  };
-
   const handleSearchButton = () => {
-    navigate("/products");
+    setSearchProducts(inputSearchValue); //Actualizamos el estado global
+    navigate("/products"); // y lo redirigimos a la página de productos
   };
 
-  //--------------------------------------------
+  //----------------Profile Menu------------------
 
-  const [userProfilePicture, setUserProfilePicture] = useState(null);
-  const [userUserName, setUserUserName] = useState(null);
-  const [userCart, setUserCart] = useState([])
-
-  const params = useParams();
-
-  useEffect(() => {
-    getData();
-  }, [loggedUserId]);
-
-  const getData = async () => {
-    const storedToken = localStorage.getItem("authToken");
-    try {
-      if (AuthContext) {
-        const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/api/user`,
-          { headers: { Authorization: `Bearer ${storedToken}` } }
-        );
-        
-        setUserCart(response.data.cart)
-        setUserUserName(response.data.username);
-        setUserProfilePicture(response.data.profilepicture);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
-
-  //--------------------------------------------
-
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  }));
-
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    width: "100%",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      [theme.breakpoints.up("sm")]: {
-        width: "15ch",
-      },
-    },
-  }));
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   /*SIDEBAR */
 
@@ -151,14 +95,28 @@ function MyNavBar({ products, setProducts }) {
         </Link>
         <Divider />
         <Link
-          to={"/CharacterDetails/1"}
+          to={"/products"}
           style={{ textDecoration: "none", color: "black" }}
         >
           <ListItem>
-            <Face2Icon sx={{ paddingRight: "10px" }} /> Our Products
+            <FreeBreakfastIcon sx={{ paddingRight: "10px" }} /> Our Products
           </ListItem>
         </Link>
         <Divider />
+        <Link to={`/cart`} style={{ textDecoration: "none", color: "black" }}>
+          <ListItem>
+            <ShoppingCartIcon sx={{ paddingRight: "10px" }} /> My cart
+          </ListItem>
+        </Link>
+        <Divider />
+        <Link
+          to={`/userprofile/${loggedUserId}`}
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <ListItem>
+            <AccountCircleIcon sx={{ paddingRight: "10px" }} /> User profile
+          </ListItem>
+        </Link>
         <Divider />
         <Link
           to={"https://github.com/alvarox86/Coffee-Express-Client"}
@@ -171,20 +129,11 @@ function MyNavBar({ products, setProducts }) {
         </Link>
         <Divider />
         <Link
-          to={"/AboutPage"}
+          to={"/aboutus"}
           style={{ textDecoration: "none", color: "black" }}
         >
           <ListItem>
             <InfoIcon sx={{ paddingRight: "10px" }} /> About the page
-          </ListItem>
-        </Link>
-        <Divider />
-        <Link
-          to={`/userprofile/${loggedUserId}`}
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          <ListItem>
-            <InfoIcon sx={{ paddingRight: "10px" }} /> User profile
           </ListItem>
         </Link>
         <Divider />
@@ -212,9 +161,10 @@ function MyNavBar({ products, setProducts }) {
         <Toolbar
           className="toolBar"
           sx={{
-            minHeight: "60px",
+            minHeight: "70px",
             display: "flex",
             justifyContent: "space-between",
+            marginBottom: "15px",
           }}
         >
           <IconButton
@@ -222,7 +172,7 @@ function MyNavBar({ products, setProducts }) {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{ ml: 1 }}
           >
             <MenuIcon onClick={toggleDrawer(true)} />
             <Drawer open={open} onClose={toggleDrawer(false)}>
@@ -230,68 +180,153 @@ function MyNavBar({ products, setProducts }) {
             </Drawer>
           </IconButton>
 
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box
+            sx={{ display: "flex", alignItems: "flex-end", flexGrow: 1, ml: 4 }}
+          >
             <img
               src={cafeicon}
               alt="LogoPagina"
-              style={{ height: "80px", marginRight: "20px" }}
+              style={{ width: "45px", marginRight: "15px" }}
+              className="imgIcon"
             />
             <Typography
-              variant="h6"
-              component="div"
-              sx={{ fontWeight: "bold" }}
+              className="h1NameApp"
+              variant="h4"
+              component="h1"
+              sx={{ fontWeight: "bold", pb: "4px" }}
             >
-              <h1>Coffee Express</h1>
+              Coffee Express
             </Typography>
           </Box>
 
-          <Search className="searchBtnNavBar">
-            <SearchIconWrapper>
-            {/* value={products} onChange={handleInputChange} */}
-                <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
+          {/*Search bar */}
 
-          {<IconButton aria-label="cart">
-            <Badge badgeContent={userCart.length} color="error">
-              <ShoppingCartIcon />
-            </Badge>
-          </IconButton>}
-
-          {/* Auth */}
-          <Link
-            to={"/signup"}
-            style={{
-              textDecoration: "none",
-              color: "black",
-              marginLeft: "20px",
+          <Paper
+            component="form"
+            onSubmit={(e) => {
+              e.preventDefault(); // evita que recargue la página
+              handleSearchButton();
+            }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              width: { xs: "100%", sm: 300 }, //responsividad
+              height: 40,
+              boxShadow: 1,
+              mr: 6,
             }}
           >
-            {isLoggedIn === true ? (
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <div className="loggedCard" key={loggedUserId}>
+            {/* Botón de limpiar solo visible si hay texto escrito */}
+            {inputSearchValue && (
+              <IconButton
+                onClick={() => {
+                  setInputSearchValue(""); // limpia el input
+                  setSearchProducts(""); // limpia el filtro aplicado
+                }}
+                sx={{ p: "10px" }}
+                aria-label="clear"
+              >
+                <CloseIcon />
+              </IconButton>
+            )}
+            <InputBase
+              sx={{ ml: 1, flex: 1 }}
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+              value={inputSearchValue}
+              onChange={(e) => setInputSearchValue(e.target.value)}
+            />
+            <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+              <SearchIcon />
+            </IconButton>
+          </Paper>
+
+          {
+            <IconButton aria-label="cart" sx={{ mr: 3 }}>
+              <Badge badgeContent={userCart} color="error">
+                <Link to="/cart">
+                  <ShoppingCartIcon sx={{ color: "grey", fontSize: "30px" }} />
+                </Link>
+              </Badge>
+            </IconButton>
+          }
+
+          {/* Auth */}
+
+          {isLoggedIn === true ? (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                flexDirection: { xs: "column", sm: "row" },
+              }}
+            >
+              <Box className="loggedCard" key={loggedUserId}>
+                <Button
+                  onClick={handleClick}
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    alignItems: "center",
+                  }}
+                >
                   <img
-                    src={userProfilePicture}
+                    src={userImgUrl}
                     alt="User"
                     style={{ width: "36px", borderRadius: "50%" }}
+                    sx={{
+                      width: { xs: "40px", sm: "46px" },
+                    }}
                   />
-                  <Typography variant="body1" >{userUserName}</Typography>
-                </div>
-                <button onClick={handleLogout} style={{ marginLeft: "10px" }}>
-                  LogOut
-                </button>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      textDecoration: "none",
+                      color: "black",
+                      paddingLeft: "10px",
+                      display: { xs: "none", sm: "block" },
+                    }}
+                  >
+                    {userName}
+                  </Typography>
+                </Button>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={openMenu}
+                  onClose={handleClose}
+                  slotProps={{
+                    list: {
+                      "aria-labelledby": "basic-button",
+                    },
+                  }}
+                >
+                  <Link
+                    to={`/userprofile/${loggedUserId}`}
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <MenuItem>Profile</MenuItem>
+                  </Link>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
               </Box>
-            ) : (
-              <>
+            </Box>
+          ) : (
+            <>
+              <Link
+                to={"/signup"}
+                style={{
+                  textDecoration: "none",
+                  color: "black",
+                  marginLeft: "20px",
+                }}
+              >
                 <AccountCircleIcon sx={{ width: "50px", height: "50px" }} />
                 <Typography variant="body1">Sign Up</Typography>
-              </>
-            )}
-          </Link>
+              </Link>
+            </>
+          )}
         </Toolbar>
       </AppBar>
 

@@ -1,90 +1,123 @@
-import { Box, Button, Divider, Paper, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Divider,
+  Paper,
+  Typography,
+  Snackbar,
+  CircularProgress,
+} from "@mui/material";
 
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import ReviewCard from "./ReviewCard";
 import CreateReview from "./CreateReview";
 import { AuthContext } from "../../context/auth.context";
 import service from "../../services/service.config";
+import { UserContext } from "../../context/profile.context";
 
 function ProductDetailsPage() {
   const { productId } = useParams();
-  const {loggedUserId} = useContext(AuthContext)
+  const { loggedUserId, rol } = useContext(AuthContext);
+  const { getUserData } = useContext(UserContext);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
 
+  const navigate = useNavigate();
 
-    const fetchProduct = async () => {
-      try {
-        const productResponse = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/api/product/${productId}`
-        );
-        setProduct(productResponse.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const fetchProduct = async () => {
+    try {
+      const productResponse = await service.get(`/product/${productId}`);
+      setProduct(productResponse.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const fetchReviews = async () => {
-      try {
-        const reviewResponse = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/api/review/product/${productId}`
-        );
-        setReviews(reviewResponse.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const fetchReviews = async () => {
+    try {
+      const reviewResponse = await service.get(`/review/product/${productId}`);
+      setReviews(reviewResponse.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
- // Esto  borra la review del estado
-const handleDeleteReview = async (reviewId) => {
-  const storedToken = localStorage.getItem("authToken");
-  try {
-    await axios.delete(`${import.meta.env.VITE_SERVER_URL}/api/review/${reviewId}`, {
-      headers: {
-        Authorization: `Bearer ${storedToken}`,
-      }
-    });
-    /*Aqui actualizamos el estado de reviews filtrando y eliminando la review que tenga ese reviewId. */
-    setReviews((prevReviews) => {
-      const updatedReviews = prevReviews.filter((review) => {
-        return review._id !== reviewId; //Si la review del id que está comprobando es diferente a la que quiero eliminar, la dejamos en reviews
-      })
-      return updatedReviews; //Devolvemos el array nuevo sin la reseña que queremos borrar.
-    } )
-  } catch (error) {
-    console.log(error)
-  }
-}
+  // Esto  borra la review del estado
+  const handleDeleteReview = async (reviewId) => {
+    const storedToken = localStorage.getItem("authToken");
+    try {
+      await service.delete(`/review/${reviewId}`, {
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
+
+      /*Aqui actualizamos el estado de reviews filtrando y eliminando la review que tenga ese reviewId. */
+      setReviews((prevReviews) => {
+        const updatedReviews = prevReviews.filter((review) => {
+          return review._id !== reviewId; //Si la review del id que está comprobando es diferente a la que quiero eliminar, la dejamos en reviews
+        });
+        return updatedReviews; //Devolvemos el array nuevo sin la reseña que queremos borrar.
+      });
+    } catch (error) {
+      console.log(error);
+      Navigate("/error");
+    }
+  };
   useEffect(() => {
     fetchProduct();
     fetchReviews();
   }, [productId]);
 
+  if (product === null) {
+    return (
+      <Box
+        height="100vh"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <CircularProgress size={60} thickness={5} sx={{ color: "#8B4513" }} />
+      </Box>
+    );
+  }
   if (!product) return <Typography>Products not found</Typography>;
   if (!reviews) return <Typography>Reviews not found </Typography>;
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
   const handleAddCart = async () => {
     try {
-      await service.patch(`/user/cart/${productId}/add`)
+      await service.patch(`/user/cart/${productId}/add`);
+      setOpenSnackbar(true);
+      getUserData();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   return (
-    <Box sx={{ p: 3, maxWidth: 1000, mx: "auto" }}>
-      {/* Sección de producto */}
+    <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 1200, mx: "auto" }}>
+      {/*  Product Section */}
+
       <Box
         sx={{
           display: "flex",
           flexDirection: { xs: "column", sm: "row" },
           gap: 4,
-          mb: 5,
+          mb: 6,
         }}
       >
+        {/* Product Image */}
         <Box
           component="img"
           src={product.imageUrl}
@@ -96,27 +129,70 @@ const handleDeleteReview = async (reviewId) => {
             maxHeight: 400,
           }}
         />
-        <Paper elevation={3} sx={{ flex: 1, p: 3 }}>
-          <Typography variant="h4" fontWeight="bold">
-            {product.name}
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
-            {product.description}
-          </Typography>
-          <Typography variant="subtitle1" fontWeight="medium" sx={{ mt: 2 }}>
-            Precio: ${product.price}
-          </Typography>
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 1 }}>
-            Region: {product.origin.region}
-          </Typography>
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 1 }}>
-            Country: {product.origin.country}
-          </Typography>
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 1 }}>
-            Type: {product.type}
-          </Typography>
 
-          <Button
+        {/* Product Info */}
+
+        <Paper
+          elevation={4}
+          sx={{
+            flex: 1,
+            p: { xs: 2, md: 4 },
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box>
+            <Typography variant="h4" fontWeight="bold">
+              {product.name}
+            </Typography>
+            <Typography variant="body1" sx={{ mt: 2 }}>
+              {product.description}
+            </Typography>
+            <Typography variant="subtitle1" fontWeight="medium" sx={{ mt: 2 }}>
+              Price: {product.price}€
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              color="text.secondary"
+              sx={{ mt: 1 }}
+            >
+              Region: {product.origin.region}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              color="text.secondary"
+              sx={{ mt: 1 }}
+            >
+              Country: {product.origin.country}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              color="text.secondary"
+              sx={{ mt: 1 }}
+            >
+              Type: {product.type}
+            </Typography>
+          </Box>
+
+          {/* Actions */}
+          <Box sx={{ mt: 4, display: "flex", gap: 2, flexWrap: "wrap" }}>
+            {product.stock <= 0 ? (
+            <Button
+            disabled
+            variant="contained"
+            size="large"
+            sx={{
+              backgroundColor: "#8B5042",
+              color: "white",
+              mt: 3,
+              "&:hover": {
+                backgroundColor: "#6c3a2f",
+              },
+            }}
+            onClick={handleAddCart}
+          >Out of stock</Button>
+          ) : (<Button
             variant="contained"
             size="large"
             sx={{
@@ -129,46 +205,71 @@ const handleDeleteReview = async (reviewId) => {
             }}
             onClick={handleAddCart}
           >
-              Add Cart
-          </Button>
+            Add Cart
+          </Button>)}
+
+            {rol === "vendor" && (
+              <Link to={`/products/${productId}/modify`}>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  sx={{
+                    backgroundColor: "#8B5042",
+                    color: "white",
+                    mt: 3,
+                    "&:hover": {
+                      backgroundColor: "#6c3a2f",
+                    },
+                  }}
+                >
+                  Edit
+                </Button>
+              </Link>
+            )}
+          </Box>
         </Paper>
       </Box>
 
       {/* Divider */}
-      <Divider sx={{ mb: 4 }} />
+
+      <Divider sx={{ mb: 5 }} />
 
       {/* Sección de Reviews y formulario de reviews */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 4,
-        }}
-      >
-        <Box>
-          <Box>
-            <CreateReview fetchReviews={fetchReviews}/>
-          </Box>
-          <Box>
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
-            Reviews
-          </Typography>
-          {reviews.length > 0 ? (
-            reviews.map((review, index) => (
-              <ReviewCard key={index} 
-              review={review} 
-              loggedUserId={loggedUserId}
-              handleDeleteReview={handleDeleteReview}
+
+      <Box sx={{ mb: 6 }}>
+        <CreateReview fetchReviews={fetchReviews} />
+
+        <Typography variant="h5" fontWeight="bold" sx={{ mt: 4, mb: 2 }}>
+          Reviews
+        </Typography>
+
+        {reviews.length > 0 ? (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            {reviews.map((review, index) => (
+              <ReviewCard
+                key={index}
+                review={review}
+                loggedUserId={loggedUserId}
+                handleDeleteReview={handleDeleteReview}
               />
-            ))
-          ) : (
-            <Typography variant="body2" color="text.secondary">
-              No comments yet.
-            </Typography>
-          )}
+            ))}
           </Box>
-        </Box>
+        ) : (
+          <Typography variant="body2" sx={{ color: "#F2E8DF" }}>
+            No comments yet.
+          </Typography>
+        )}
       </Box>
+
+      {/* Snackbar */}
+      
+      <Snackbar
+        open={openSnackbar}
+        onClose={handleClose}
+        autoHideDuration={3000}
+      >
+        <Alert severity="success">Product added to cart</Alert>
+      </Snackbar>
     </Box>
   );
 }

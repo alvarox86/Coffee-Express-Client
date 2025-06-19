@@ -1,27 +1,45 @@
-import { Box, Button, MenuItem, Stack, TextField, Typography } from "@mui/material";
-import axios from "axios";
-import { useContext, useState } from "react";
+import {
+  Box,
+  Button,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+  Snackbar,
+} from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
+import service from "../../services/service.config";
 
 function CreateProduct() {
-  const { loggedUserId } = useContext(AuthContext);
+  const { loggedUserId, rol } = useContext(AuthContext);
+  
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (rol && rol !== "vendor") {
+      alert("Access denied.");
+      navigate("/products");
+      return;
+    }
+  }, [rol]);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [origin, setOrigin] = useState({});
   const [country, setCountry] = useState("");
   const [region, setRegion] = useState("");
   const [type, setType] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
 
+  const [imageUrl, setImageUrl] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const handleSubmitProduct = async (e) => {
     e.preventDefault();
-
-    console.log("Enviando formulario");
 
     const newProduct = {
       name,
@@ -40,29 +58,53 @@ function CreateProduct() {
     const storedToken = localStorage.getItem("authToken");
     try {
       if (storedToken) {
-        console.log(" Info del producto", newProduct);
-
-        await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/api/product`,
-          newProduct,
-          {
-            headers: {
-              Authorization: `Bearer ${storedToken} `,
-            },
-          }
-        );
+        await service.post(`/product`, newProduct, {
+          headers: {
+            Authorization: `Bearer ${storedToken} `,
+          },
+        });
       }
-      console.log("producto añadido correctamente");
-
-      navigate("/products");
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        navigate("/products");
+      }, 1000);
     } catch (error) {
       console.log(error);
-      console.error("Error al crear producto");
+      navigate("/error")
+    }
+  };
+
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!event.target.files[0]) {
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      alert("Only images accepted.");
+      return;
+    }
+
+    setIsUploading(true);
+
+    const uploadData = new FormData();
+    uploadData.append("image", event.target.files[0]);
+
+    try {
+      const response = await service.post(`/upload`, uploadData);
+
+      setImageUrl(response.data.imageUrl);
+      setIsUploading(false);
+    } catch (error) {
+      navigate("/error");
+      console.error(error);
     }
   };
 
   return (
-    <div>
+    <>
       <Box
         component="form"
         onSubmit={handleSubmitProduct}
@@ -73,10 +115,16 @@ function CreateProduct() {
           borderRadius: 4,
           boxShadow: 3,
           backgroundColor: "#fff",
+          marginBottom: "60px",
         }}
       >
-        <Typography variant="h5" fontWeight="bold" gutterBottom>
-          Submit your product
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          gutterBottom
+          sx={{ color: "#D9A689" }}
+        >
+          Create a new product
         </Typography>
 
         <Stack spacing={3}>
@@ -101,10 +149,10 @@ function CreateProduct() {
           />
 
           <TextField
-            name="imageUrl"
-            label="Image"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
+            name="image"
+            type="file"
+            onChange={handleFileUpload}
+            disabled={isUploading}
             fullWidth
           />
 
@@ -165,15 +213,28 @@ function CreateProduct() {
 
           <Button
             variant="contained"
-            color="primary"
             type="submit"
-            sx={{ alignSelf: "flex-end" }}
+            sx={{
+              alignSelf: "flex-end",
+              backgroundColor: "#D9A689",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#c18e73",
+              },
+            }}
           >
-            Create Product
+            Create
           </Button>
         </Stack>
       </Box>
-    </div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+        message="Product created successfully!"
+        anchorOrigin={{ vertical: "bottom", horizontal:"left" }}
+      />
+    </>
   );
 }
 

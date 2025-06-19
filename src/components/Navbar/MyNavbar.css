@@ -1,8 +1,25 @@
-.searchBtnNavBar{
-    border: solid 0.5px;
+.searchBtnNavBar {
+  border: solid 0.5px;
 }
 
-header{
-    display: flex !important;
-    justify-content: space-evenly !important;
+header {
+  display: flex !important;
+  justify-content: space-evenly !important;
+}
+
+@media (max-width: 768px) {
+  .h1NameApp {
+    display: none;
+  }
+  .imgIcon {
+    height: 50px !important;
+    width: 50px;
+  }
+}
+
+.h1NameApp {
+  font-family: "Montserrat", sans-serif !important;
+  font-optical-sizing: auto !important; 
+  font-weight: 500 !important;
+  font-style: normal !important;
 }
