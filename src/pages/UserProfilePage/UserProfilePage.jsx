@@ -1,8 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
-import "./UserProfilePage.css"
 import { Link, useParams } from "react-router-dom";
 import service from "../../services/service.config";
+import { Box, Button, Divider, Paper, Typography } from "@mui/material";
+import "./UserProfilePage.css"
 
 function UserProfilePage() {
     const params = useParams()
@@ -34,30 +35,69 @@ function UserProfilePage() {
     }
 
     return (
-    <div className="userProfileInfo">
+    <Box className="userProfileInfo" >
     {isLoggedIn ? (
-        <div>
-            <div className="userProfileData">
-                <div>
-                    <img src={userProfilePicture} alt="foto perfil" className="userIcon" />
-                </div>
-                <div className="userTextInfo">
-                    <p>{userUserName}</p>
-                    <p>{userAdress}</p>
-                    <p>{userPhone}</p>
-                </div>
-             </div>
-
+        <Box>
+            <Box
+                sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                gap: 4,
+                mb: 5,
+                backgroundColor:"#F2E8DF",
+                padding:"20px",
+                borderRadius:"10px"
+                }}
+            >
+                    <Box 
+                    component="img" 
+                    src={userProfilePicture} 
+                    alt="foto perfil" 
+                    sx={{
+                        width: { xs: "100%", sm: "40%" },
+                        borderRadius: 2,
+                        objectFit: "cover",
+                        maxHeight: 400,
+                    }}
+                    />
+                <Paper elevation={3} sx={{ flex: 1, p: 3 }}>
+                    <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
+                        User name:
+                    </Typography>
+                    <Typography variant="h4" fontWeight="bold">{userUserName}</Typography>
+                    <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
+                        Adress:
+                    </Typography>
+                    <Typography variant="h4" fontWeight="bold">{userAdress}</Typography>
+                    <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
+                        Phone:
+                    </Typography>
+                    <Typography variant="h4" fontWeight="bold">{userPhone}</Typography>
+                </Paper>
+            </Box>
             <div className="btnEditProfile">
                 <Link to={`/editprofile/${loggedUserId}`}>
-                    <button>Edit profile</button>
+                    <Button
+                    variant="contained"
+                    size="large"
+                    sx={{
+                    backgroundColor: "#8B5042",
+                    color: "white",
+                    mt: 3,
+                    "&:hover": {
+                        backgroundColor: "#6c3a2f",
+                    },
+                    }}
+                    >
+                    Edit profile
+                    </Button>
                 </Link>
             </div>
-        </div>
+        </Box>
     ):(
         <h2>No tienes permiso para ver esto</h2>
     )}
-    </div>
+    </Box>
   )
 }
 
