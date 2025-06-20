@@ -1,5 +1,3 @@
-// in "src/components/PaymentIntent.jsx"
-
 import { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -13,6 +11,7 @@ function PaymentIntent({ productDetails }) {
   const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
+
     // Create PaymentIntent as soon as the page loads
     handleUseEffect()
   }, []);

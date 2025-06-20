@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate, Link } from "react-router-dom";
 import service from "../../services/service.config";
 import { UserContext } from "../../context/profile.context";
@@ -49,10 +48,6 @@ function EditProfilePage() {
       console.log(error);
     }
   };
-
-  /* if(userUserName === null || userPhone === null || userProfilePicture === null || userAdress === null){
-        <CircularProgress />
-    } */
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
@@ -108,11 +103,11 @@ function EditProfilePage() {
         border: "1px solid #ddd",
         borderRadius: 2,
         boxShadow: 3,
-        bgcolor: "background.paper",
+        bgcolor: "white",
         display: "flex",
         flexDirection: "column",
         gap: 3,
-        marginBottom: "40px"
+        marginBottom: "60px"
       }}
     >
       <Typography
@@ -186,7 +181,7 @@ function EditProfilePage() {
             },
           }}
         >
-          Edit your profile
+          Update
         </Button>
 
         <Link

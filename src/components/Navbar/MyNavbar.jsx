@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useContext } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { UserContext } from "../../context/profile.context";
 import "./MyNavbar.css";
 import cafeicon from "../../assets/images/iconlogo_bsqf1c.png";
 
-import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -34,8 +33,7 @@ import MenuItem from "@mui/material/MenuItem";
 
 function MyNavBar({ setSearchProducts }) {
   const { isLoggedIn, loggedUserId, rol } = useContext(AuthContext);
-  const { userName, userImgUrl, userCart, setUserCart } =
-    useContext(UserContext);
+  const { userName, userImgUrl, userCart, setUserCart } = useContext(UserContext);
 
   const navigate = useNavigate();
   const [inputSearchValue, setInputSearchValue] = useState("");
@@ -65,7 +63,7 @@ function MyNavBar({ setSearchProducts }) {
 
   const handleSearchButton = () => {
     setSearchProducts(inputSearchValue); //Actualizamos el estado global
-    navigate("/products"); // y lo redirigimos a la página de productos
+    navigate("/products"); 
   };
 
   //----------------Profile Menu------------------
@@ -156,141 +154,172 @@ function MyNavBar({ setSearchProducts }) {
   );
 
   return (
-<Toolbar
-  className="toolBar"
-  sx={{
-    height: "80px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center", 
-    px: { xs: 1, sm: 2, md: 4 },
-    bgcolor: "white"
-  }}
->
-  {/* Menú lateral */}
-  <IconButton size="large" edge="start" color="black" aria-label="menu" sx={{ ml: 2, marginRight: "0.5em" }}>
-    <MenuIcon onClick={toggleDrawer(true)} />
-    <Drawer open={open} onClose={toggleDrawer(false)}>
-      {DrawerList}
-    </Drawer>
-  </IconButton>
-
-  {/* Name */}
-  <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1, ml: 2 }}>
-    <img
-      src={cafeicon}
-      alt="LogoPagina"
-      style={{ width: "45px", marginRight: "15px" }}
-      className="imgIcon"
-    />
-    <Typography
-      className="h1NameApp"
-      variant="h4"
-      component="h1"
-      sx={{ fontWeight: "bold", display: { xs: "none", md: "block" }, color: "#261420" }}
+    <Toolbar
+      className="toolBar"
+      sx={{
+        height: "80px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        px: { xs: 1, sm: 2, md: 4 },
+        bgcolor: "white",
+      }}
     >
-      Coffee Express
-    </Typography>
-  </Box>
 
-  {/* Search bar */}
-  <Paper
-    component="form"
-    onSubmit={(e) => {
-      e.preventDefault();
-      handleSearchButton();
-    }}
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      width: { xs: "100px", sm: 250, md: 300 },
-      height: 40,
-      boxShadow: 2,
-      mx: 2,
-      
-    }}
-  >
-    {inputSearchValue && (
+      {/* Sidebar Menu */}
+
       <IconButton
-        onClick={() => {
-          setInputSearchValue("");
-          setSearchProducts("");
-        }}
-        sx={{ p: "10px" }}
-        aria-label="clear"
+        size="large"
+        edge="start"
+        color="black"
+        aria-label="menu"
+        sx={{ ml: 2, marginRight: "0.5em" }}
       >
-        <CloseIcon />
+        <MenuIcon onClick={toggleDrawer(true)} />
+        <Drawer open={open} onClose={toggleDrawer(false)}>
+          {DrawerList}
+        </Drawer>
       </IconButton>
-    )}
-    <InputBase
-      sx={{ ml: 1, flex: 1 }}
-      placeholder="Search by name..."
-      inputProps={{ "aria-label": "search" }}
-      value={inputSearchValue}
-      onChange={(e) => setInputSearchValue(e.target.value)}
-    />
-    <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
-      <SearchIcon />
-    </IconButton>
-  </Paper>
 
-  {/* Carrito */}
-  <IconButton aria-label="cart" sx={{ mr: 3 }}>
-    <Badge badgeContent={userCart} color="error">
-      <Link to="/cart">
-        <ShoppingCartIcon sx={{ color: "grey", fontSize: "30px" }} />
-      </Link>
-    </Badge>
-  </IconButton>
+      {/* Title and logo */}
 
-  {/* Usuario logueado o no */}
-  {isLoggedIn ? (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <Button onClick={handleClick} sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1, ml: 2 }}>
         <img
-          src={userImgUrl}
-          alt="User"
-          style={{ width: "36px", borderRadius: "50%" }}
+          src={cafeicon}
+          alt="LogoPagina"
+          style={{ width: "45px", marginRight: "15px" }}
+          className="imgIcon"
         />
         <Typography
-          variant="body1"
+          className="h1NameApp"
+          variant="h4"
+          component="h1"
           sx={{
-            textDecoration: "none",
-            color: "black",
-            paddingLeft: "10px",
-            display: { xs: "none", sm: "block" },
+            fontWeight: "bold",
+            display: { xs: "none", md: "block" },
+            color: "#261420",
           }}
         >
-          {userName}
+          Coffee Express
         </Typography>
-      </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={openMenu}
-        onClose={handleClose}
-        slotProps={{
-          list: {
-            "aria-labelledby": "basic-button",
-          },
+      </Box>
+
+      {/* Search bar */}
+
+      <Paper
+        component="form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSearchButton();
+        }}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          width: { xs: "100px", sm: 250, md: 300 },
+          height: 40,
+          boxShadow: 2,
+          mx: 2,
         }}
       >
-        <Link to={`/userprofile/${loggedUserId}`} style={{ textDecoration: "none", color: "black" }}>
-          <MenuItem>Profile</MenuItem>
+        {inputSearchValue && (
+          <IconButton
+            onClick={() => {
+              setInputSearchValue("");
+              setSearchProducts("");
+            }}
+            sx={{ p: "10px" }}
+            aria-label="clear"
+          >
+            <CloseIcon />
+          </IconButton>
+        )}
+        <InputBase
+          sx={{ ml: 1, flex: 1 }}
+          placeholder="Search by name..."
+          inputProps={{ "aria-label": "search" }}
+          value={inputSearchValue}
+          onChange={(e) => setInputSearchValue(e.target.value)}
+        />
+        <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+          <SearchIcon />
+        </IconButton>
+      </Paper>
+
+      {/* Cart */}
+
+      <IconButton aria-label="cart" sx={{ mr: 3 }}>
+        <Badge badgeContent={userCart} color="error">
+          <Link to="/cart">
+            <ShoppingCartIcon sx={{ color: "grey", fontSize: "30px" }} />
+          </Link>
+        </Badge>
+      </IconButton>
+
+      {/*Login and logout */}
+      
+      {isLoggedIn ? (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Button
+            onClick={handleClick}
+            sx={{ display: "flex", alignItems: "center" }}
+          >
+            <img
+              src={userImgUrl}
+              alt="User"
+              style={{ width: "36px", borderRadius: "50%" }}
+            />
+            <Typography
+              variant="body1"
+              sx={{
+                textDecoration: "none",
+                color: "black",
+                paddingLeft: "10px",
+                display: { xs: "none", sm: "block" },
+              }}
+            >
+              {userName}
+            </Typography>
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={openMenu}
+            onClose={handleClose}
+            slotProps={{
+              list: {
+                "aria-labelledby": "basic-button",
+              },
+            }}
+          >
+            <Link
+              to={`/userprofile/${loggedUserId}`}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <MenuItem>Profile</MenuItem>
+            </Link>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
+        </Box>
+      ) : (
+        <Link
+          to={"/signup"}
+          style={{
+            textDecoration: "none",
+            color: "black",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <AccountCircleIcon sx={{ width: "36px", height: "36px", mr: 1 }} />
+          <Typography
+            variant="body1"
+            sx={{ display: { xs: "none", sm: "block" } }}
+          >
+            Sign Up
+          </Typography>
         </Link>
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
-      </Menu>
-    </Box>
-  ) : (
-    <Link
-      to={"/signup"}
-      style={{ textDecoration: "none", color: "black", display: "flex", alignItems: "center" }}
-    >
-      <AccountCircleIcon sx={{ width: "36px", height: "36px", mr: 1 }} />
-      <Typography variant="body1" sx={{ display: { xs: "none", sm: "block" } }}>Sign Up</Typography>
-    </Link>
-  )}
-</Toolbar>
+      )}
+    </Toolbar>
   );
 }
 

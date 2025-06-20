@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ProductCard from "../../components/ProductCard/ProductCard";
 
 import { Box, Container, Typography } from "@mui/material";
@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import service from "../../services/service.config";
 
 function ProductsPage({ products, setProducts, searchProducts }) {
+  
   const filteredProducts = products.filter((product) => {
     return product.name.toLowerCase().includes(searchProducts.toLowerCase());
   });

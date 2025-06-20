@@ -24,7 +24,7 @@ function LoginPage() {
     e.preventDefault();
 
 
-    // ... contactar al backend para validar credenciales de usuario aqui
+    // here we contact backend to validate user credentials
 
     const userCredentials = {
       email,
@@ -34,14 +34,9 @@ function LoginPage() {
     try {
 
       const response = await service.post(`/auth/login`, userCredentials)
-
-      // 1. almacenamos el token en localStorage
       localStorage.setItem("authToken", response.data.authToken)
 
-      // 2. crear el contexto y actualizar los estados del contexto
       await authenticateUser()
-
-      // 3. redireccionamos al usuario a alguna pagina privada
           getUserData();
       navigate("/")
       
@@ -49,8 +44,8 @@ function LoginPage() {
       console.log(error)
       if (error.response.status === 400) {
         setErrorMessage(error.response.data.errorMessage)
+  
       } else {
-        // navigate a error
         navigate("/")
       }
     }

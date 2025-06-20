@@ -4,7 +4,7 @@ import { CircularProgress, Box, Typography } from "@mui/material";
 
 const AuthContext = createContext();
 
-// el componente que almacena y controla los estados del contexto
+
 function AuthWrapper(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedUserId, setLoggedUserId] = useState(null);
@@ -15,11 +15,12 @@ function AuthWrapper(props) {
   const authenticateUser = async () => {
     setIsValidatingToken(true);
 
-    // funcion para validar el token del usuario y saber quien es y actualiza los estados
+    // This is to validate token and to know who is the user is try to enter
     try {
       const response = await service.get(`/auth/verify`);
 
-      // si la llamada llega a este punto significa que el backend valido el token
+      // if the call comes here, the token is successfully validated
+
       setIsLoggedIn(true);
       setLoggedUserId(response.data.payload._id);
       setRol(response.data.payload.rol);
@@ -27,7 +28,7 @@ function AuthWrapper(props) {
     } catch (error) {
       console.log(error);
 
-      // si la llamada llega a este punto significa que el token no existe, no es valido o expiró
+      // if the call comes here, the token is not validated
       setIsLoggedIn(false);
       setLoggedUserId(null);
       setRol(null);

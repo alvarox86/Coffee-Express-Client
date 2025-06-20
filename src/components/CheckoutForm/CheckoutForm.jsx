@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   PaymentElement,
-  LinkAuthenticationElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
@@ -15,7 +14,6 @@ function CheckoutForm() {
 
   const { getUserData } = useContext(UserContext);
 
-  const [email, setEmail] = useState("");
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -62,8 +60,6 @@ function CheckoutForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Make sure to change this to your payment completion page
-        // !IMPORTANT. If using VITE, make sure you use the correct variable naming and usage (import.meta.env.VITE_VARIABLE_NAME)
         return_url: `${window.location.origin}/payment-success`,
       },
     });
@@ -106,10 +102,6 @@ function CheckoutForm() {
       }}
     >
       <form id="payment-form" onSubmit={handleSubmit}>
-        {/* <LinkAuthenticationElement
-        id="link-authentication-element"
-        onChange={(e) => setEmail(e.target.value)}
-      /> */}
         <PaymentElement id="payment-element" options={paymentElementOptions} />
         <Button
           type="submit"
@@ -132,7 +124,9 @@ function CheckoutForm() {
             )}
           </span>
         </Button>
+        
         {/* Show any error or success messages */}
+        
         {message && (
           <Box
             id="payment-message"

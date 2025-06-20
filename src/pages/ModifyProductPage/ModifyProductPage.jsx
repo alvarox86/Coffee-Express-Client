@@ -14,7 +14,7 @@ import { AuthContext } from "../../context/auth.context";
 
 function ModifyProductPage() {
   const { productId } = useParams();
-  const { loggedUserId, rol } = useContext(AuthContext);
+  const { loggedUserId } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -104,7 +104,7 @@ function ModifyProductPage() {
           Authorization: `Bearer ${storedToken}`,
         },
       });
-      console.log("producto eliminado");
+      
       navigate("/products", { state: { updated: true } });
     } catch (error) {
       console.log(error);
@@ -143,7 +143,8 @@ function ModifyProductPage() {
         borderRadius: 4,
         boxShadow: 3,
         backgroundColor: "#fff",
-        marginBottom: "30px",
+        marginBottom: "60px",
+        marginTop: "60px"
       }}
     >
       <Typography variant="h5" fontWeight="bold" gutterBottom>

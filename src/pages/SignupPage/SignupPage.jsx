@@ -41,12 +41,13 @@ function SignupPage() {
     } catch (error) {
       console.log(error);
       if (error.response.status) {
+
         // esto es para que los errores de cliente (400) los podamos mostrar al usuario
         console.log(error.response.data.errorMessage);
         setErrorMessage(error.response.data.errorMessage);
       } else {
-        // navigate a pagina de error
-        navigate("/");
+
+        navigate("/error");
       }
     }
   };
@@ -69,7 +70,7 @@ function SignupPage() {
         align="center"
         sx={{ color: "#8c5042" }}
       >
-        Create your account
+        Create an account
       </Typography>
 
       <form onSubmit={handleSignup}>

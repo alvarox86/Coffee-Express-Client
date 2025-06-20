@@ -32,7 +32,6 @@ function CreateReview({ fetchReviews }) {
       alert("Please provide a rating between 1 and 5 stars.");
       return;
     }
-    console.log("Enviando formulario");
 
     const newReview = {
       username: loggedUserId,
@@ -51,13 +50,10 @@ function CreateReview({ fetchReviews }) {
         });
 
         fetchReviews();
-
-        /*Clean form */
         setRating(null);
         setComment("");
-        console.log("reseña añadida correctamente");
-      }
 
+      }
     } catch (error) {
       console.log(error);
     }

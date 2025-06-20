@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 
 import { useContext, useEffect, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ReviewCard from "./ReviewCard";
 import CreateReview from "./CreateReview";
 import { AuthContext } from "../../context/auth.context";
@@ -65,7 +65,7 @@ function ProductDetailsPage() {
       });
     } catch (error) {
       console.log(error);
-      Navigate("/error");
+      navigate("/error");
     }
   };
   useEffect(() => {
@@ -85,8 +85,38 @@ function ProductDetailsPage() {
       </Box>
     );
   }
-  if (!product) return <Typography>Products not found</Typography>;
-  if (!reviews) return <Typography>Reviews not found </Typography>;
+  if (!product) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        py={4}
+      >
+        <ErrorOutlineIcon color="error" sx={{ fontSize: 50, mb: 2 }} />
+        <Typography variant="h6" color="error">
+          Product not found
+        </Typography>
+      </Box>
+    );
+  }
+  if (!reviews) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        py={4}
+      >
+        <ErrorOutlineIcon color="warning" sx={{ fontSize: 50, mb: 2 }} />
+        <Typography variant="h6" color="warning.main">
+          No reviews available for this product
+        </Typography>
+      </Box>
+    );
+  }
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -118,6 +148,7 @@ function ProductDetailsPage() {
         }}
       >
         {/* Product Image */}
+
         <Box
           component="img"
           src={product.imageUrl}
@@ -178,35 +209,39 @@ function ProductDetailsPage() {
           {/* Actions */}
           <Box sx={{ mt: 4, display: "flex", gap: 2, flexWrap: "wrap" }}>
             {product.stock <= 0 ? (
-            <Button
-            disabled
-            variant="contained"
-            size="large"
-            sx={{
-              backgroundColor: "#8B5042",
-              color: "white",
-              mt: 3,
-              "&:hover": {
-                backgroundColor: "#6c3a2f",
-              },
-            }}
-            onClick={handleAddCart}
-          >Out of stock</Button>
-          ) : (<Button
-            variant="contained"
-            size="large"
-            sx={{
-              backgroundColor: "#8B5042",
-              color: "white",
-              mt: 3,
-              "&:hover": {
-                backgroundColor: "#6c3a2f",
-              },
-            }}
-            onClick={handleAddCart}
-          >
-            Add Cart
-          </Button>)}
+              <Button
+                disabled
+                variant="contained"
+                size="large"
+                sx={{
+                  backgroundColor: "#8B5042",
+                  color: "white",
+                  mt: 3,
+                  "&:hover": {
+                    backgroundColor: "#6c3a2f",
+                  },
+                }}
+                onClick={handleAddCart}
+              >
+                Out of stock
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                size="large"
+                sx={{
+                  backgroundColor: "#8B5042",
+                  color: "white",
+                  mt: 3,
+                  "&:hover": {
+                    backgroundColor: "#6c3a2f",
+                  },
+                }}
+                onClick={handleAddCart}
+              >
+                Add Cart
+              </Button>
+            )}
 
             {rol === "vendor" && (
               <Link to={`/products/${productId}/modify`}>
@@ -234,7 +269,7 @@ function ProductDetailsPage() {
 
       <Divider sx={{ mb: 5 }} />
 
-      {/* Sección de Reviews y formulario de reviews */}
+      {/* Reviews and create reviews */}
 
       <Box sx={{ mb: 6 }}>
         <CreateReview fetchReviews={fetchReviews} />
@@ -256,13 +291,13 @@ function ProductDetailsPage() {
           </Box>
         ) : (
           <Typography variant="body2" sx={{ color: "#F2E8DF" }}>
-            No comments yet.
+          This product has no reviews yet. Be the first to leave your review!
           </Typography>
         )}
       </Box>
 
       {/* Snackbar */}
-      
+
       <Snackbar
         open={openSnackbar}
         onClose={handleClose}

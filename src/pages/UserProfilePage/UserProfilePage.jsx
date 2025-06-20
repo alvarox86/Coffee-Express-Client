@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
 import { Link, useParams } from "react-router-dom";
 import service from "../../services/service.config";
-import { Box, Button, Divider, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import "./UserProfilePage.css";
 
 function UserProfilePage() {
@@ -49,6 +49,7 @@ function UserProfilePage() {
               backgroundColor: "#F2E8DF",
               padding: "20px",
               borderRadius: "10px",
+              marginTop:"60px"
             }}
           >
             <Box
@@ -64,13 +65,13 @@ function UserProfilePage() {
             />
             <Paper elevation={3} sx={{ flex: 1, p: 3 }}>
               <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
-                User name:
+                Name:
               </Typography>
               <Typography variant="h4" fontWeight="bold">
                 {userUserName}
               </Typography>
               <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
-                Adress:
+                Address:
               </Typography>
               <Typography variant="h4" fontWeight="bold">
                 {userAdress}
@@ -120,7 +121,7 @@ function UserProfilePage() {
               mb: 2,
             }}
           >
-            You don't have permission to view this
+            You need an account to see this page
           </Typography>
 
           <Link to="/signup" style={{ textDecoration: "none" }}>

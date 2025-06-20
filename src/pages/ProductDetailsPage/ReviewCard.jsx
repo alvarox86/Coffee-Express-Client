@@ -1,7 +1,8 @@
 import { Box, Button, Typography, Rating } from "@mui/material";
 
 function ReviewCard({ review, loggedUserId, handleDeleteReview }) {
-  //Comparamos el id del usuario logueado con el id del autor de la reseña
+
+  //Comparamos el id del usuario logueado con el id del autor de la reseña para asegurarnos de que es el propio creador
   const isAuthor = review.username._id === loggedUserId;
 
   return (
@@ -39,6 +40,7 @@ function ReviewCard({ review, loggedUserId, handleDeleteReview }) {
         </Typography>
 
         {/*Si el autor es true entonces que se muestre el botón */}
+        
         {isAuthor && (
           <Button
             variant="outlined"

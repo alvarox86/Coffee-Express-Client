@@ -175,7 +175,7 @@ function CartPage() {
           padding: "0",
         }}
       >
-        {/* Mensaje de aviso */}
+        {/* Alert message */}
         <Box
           sx={{
             backgroundColor: "#ffefef",

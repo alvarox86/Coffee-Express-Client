@@ -39,8 +39,6 @@ function UserWrapper(props){
     )
 }
 
-
-
 export {
   UserContext,
   UserWrapper

@@ -27,7 +27,7 @@ function App() {
     <div className='app-container'>
       <MyNavbar products={products} setProducts={setProducts} setSearchProducts={setSearchProducts}/>
 
-      <main>
+      <main className='mainContent'>
         <Routes>
          <Route path='/' element={<HomePage />} />
          <Route path='/signup' element={<SignupPage/>} />
@@ -47,7 +47,7 @@ function App() {
         <Route path="/error" element={<ServerErrorPage/>}/>
         <Route path="/under-construction" element={<UnderConstruction/>}/>
       </Routes>
-      </main>
+      </main >
       <MyFooter/>
     </div>
   )
