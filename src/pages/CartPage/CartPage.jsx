@@ -194,6 +194,7 @@ function CartPage() {
         </Box>
         {showPaymentIntent === false ? (
           <Button
+          type="submit"
             variant="contained"
             onClick={() => setShowPaymentIntent(true)}
             sx={{
